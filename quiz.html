@@ -417,7 +417,7 @@ select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1re
 .num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:var(--cell-size,1.3rem);min-height:64px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
 .num-cell:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 16px rgba(79,121,255,.18)}
 .num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
-.floaty{animation:floaty 3.2s ease-in-out infinite}
+.floaty{animation:floaty 1.2s ease-in-out 1}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
 </style></head>
@@ -429,7 +429,9 @@ const symbolMap=${JSON.stringify(symbolMap)};
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
 const fontSlider=document.getElementById('cellFontSlider');
-function draw(){const s=symbolMap[sel.value]||"⭐";grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell floaty';d.style.animationDelay=(i*0.04)+'s';d.textContent=s+" "+i;d.addEventListener('click',()=>d.classList.toggle('active'));grid.appendChild(d);}}
+const synth=window.speechSynthesis;
+function speakNumber(n){if(!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(String(n));u.lang='zh-HK';u.rate=0.9;u.pitch=1;synth.speak(u);}
+function draw(){const s=symbolMap[sel.value]||"⭐";grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';d.textContent=s+" "+i;d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}}
 fontSlider.addEventListener('input',()=>{document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');});
 document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');
 sel.addEventListener('change',draw);draw();

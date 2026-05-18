@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>K2 數學練習題 - 平板版</title>
+  <style>
+    :root {
+      --bg1: #fff7d6;
+      --bg2: #dff7ff;
+      --card: #ffffff;
+      --ink: #2d2a32;
+      --pink: #ff7fab;
+      --mint: #82e9c5;
+      --sky: #88c9ff;
+      --sun: #ffd86b;
+      --ok: #1f9d55;
+      --bad: #d64545;
+      --shadow: 0 8px 20px rgba(45, 42, 50, 0.12);
+      --radius: 20px;
+      --question-size: 1.5rem;
+      --choice-size: 1.35rem;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 10%, #fff3b5 0, transparent 25%),
+        radial-gradient(circle at 90% 20%, #c7f0ff 0, transparent 22%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      padding: 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      z-index: 0;
+      filter: blur(2px);
+      animation: floaty 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: 18px;
+      left: -40px;
+      background: radial-gradient(circle, #ffd1e4 0%, #ffd1e400 70%);
+    }
+
+    body::after {
+      bottom: 10px;
+      right: -45px;
+      background: radial-gradient(circle, #c9f5ff 0%, #c9f5ff00 70%);
+      animation-delay: -2.5s;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.65);
+      border: 3px dashed #ffc6dc;
+      border-radius: 28px;
+      padding: 16px 12px 28px;
+      backdrop-filter: blur(2px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .wrap::before {
+      content: "🌟 🌈 🧸 🍓";
+      position: absolute;
+      top: -14px;
+      right: 16px;
+      font-size: 1.2rem;
+      letter-spacing: 6px;
+      opacity: 0.95;
+    }
+
+    h1 {
+      margin: 8px 0 10px;
+      text-align: center;
+      font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: 0 0 18px;
+      font-weight: 700;
+      color: #50586b;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .size-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffffcc;
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+
+    .size-control input[type="range"] {
+      width: 170px;
+      accent-color: #63a2ff;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #1f2430;
+      background: linear-gradient(180deg, #fff, #ffe9f2);
+      box-shadow: var(--shadow), 0 2px 0 #ffffffaa inset;
+      min-height: 48px;
+      min-width: 120px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(1px) scale(0.99); }
+
+    .submit { background: linear-gradient(180deg, #dcffe8, #abf0ca); }
+    .reset { background: linear-gradient(180deg, #fff5d8, #ffe39a); }
+
+    .score {
+      text-align: center;
+      font-weight: 800;
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin: 14px 0;
+      box-shadow: var(--shadow);
+      border: 2px solid #ffe9f5;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(45, 42, 50, 0.14);
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, #ffe3ef, #eaf8ff);
+    }
+
+    .q {
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 16px;
+      background: #fffdf6;
+      border: 2px solid #f3ecff;
+      transition: transform 0.18s ease;
+    }
+
+    .q:hover { transform: scale(1.005); }
+
+    .q p {
+      margin: 0 0 10px;
+      font-size: var(--question-size);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .q-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .speak-btn {
+      min-width: 96px;
+      min-height: 44px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      background: linear-gradient(180deg, #eef7ff, #d8ecff);
+      border: 2px solid #bddcff;
+      box-shadow: none;
+      flex-shrink: 0;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+      gap: 8px;
+    }
+
+    .choice {
+      display: block;
+      border: 2px solid #dce4ff;
+      border-radius: 14px;
+      background: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 800;
+      min-height: 52px;
+      font-size: var(--choice-size);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .choice.symbol-choice {
+      font-size: calc(var(--choice-size) + 0.3rem);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .choice input { display: none; }
+
+    .choice:has(input:checked) {
+      border-color: #63a2ff;
+      background: #eaf3ff;
+      box-shadow: 0 0 0 2px #dbe9ff inset;
+      animation: pop 0.22s ease;
+    }
+
+    .feedback {
+      margin-top: 8px;
+      font-weight: 800;
+      min-height: 24px;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .wrap { padding: 12px 8px 20px; }
+      .q p { font-size: var(--question-size); }
+      .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <h1>🌈 K2 數學練習題 🌟</h1>
+    <p class="subtitle">適合 4-5 歲小朋友，輕鬆按選擇題學數學</p>
+
+    <div class="toolbar">
+      <button type="button" id="randomBtn">🎲 隨機新題目</button>
+      <div class="size-control">
+        <span>🔡</span>
+        <input type="range" id="fontSlider" min="1.3" max="2.4" step="0.05" value="1.65" />
+        <span>🔠</span>
+      </div>
+      <button class="submit" id="checkBtn">✅ 交卷睇分數</button>
+      <button class="reset" id="resetBtn">🔄 重新開始</button>
+    </div>
+
+    <p class="score" id="score">未交卷</p>
+
+    <form id="quiz"></form>
+  </main>
+
+  <script>
+    const iconRepeat = (icon, n) => Array.from({ length: n }, () => icon).join('');
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+
+    const buildSections = () => {
+      const a1 = randInt(2, 7);
+      const a2 = randInt(3, 8);
+      const a3 = randInt(2, 6);
+      const a4 = randInt(1, 5);
+      const a5 = randInt(4, 8);
+      const b6L = randInt(2, 6), b6R = randInt(1, b6L - 1);
+      const b7L = randInt(1, 4), b7R = randInt(b7L + 1, 6);
+      const c10a = randInt(1, 4), c10b = randInt(1, 4), c10 = c10a + c10b;
+      const c11a = randInt(2, 5), c11b = randInt(1, 4), c11 = c11a + c11b;
+      const c12a = randInt(2, 5), c12b = randInt(1, 3), c12 = c12a + c12b;
+      const c13a = randInt(3, 6), c13b = randInt(1, 3), c13 = c13a + c13b;
+      const c14a = randInt(2, 5), c14b = randInt(1, 4), c14 = c14a + c14b;
+      const d15a = randInt(4, 8), d15b = randInt(1, 3), d15 = d15a - d15b;
+      const d16a = randInt(4, 8), d16b = randInt(1, Math.min(4, d16a - 1)), d16 = d16a - d16b;
+      const d17a = randInt(5, 9), d17b = randInt(1, Math.min(4, d17a - 1)), d17 = d17a - d17b;
+      const d18a = randInt(4, 8), d18b = randInt(1, Math.min(3, d18a - 1)), d18 = d18a - d18b;
+      const f24 = randInt(4, 8);
+      const f25step = randInt(2, 3), f25base = randInt(1, 3), f25 = f25base + f25step * 3;
+
+      return [
+      {
+        title: "A. 數一數，寫數字",
+        questions: [
+          { t: `1. ${iconRepeat("🍎", a1)} 有幾多個蘋果？`, a: String(a1), c: shuffle([String(a1 - 1), String(a1), String(a1 + 1)]) },
+          { t: `2. ${iconRepeat("⭐", a2)} 有幾多粒星星？`, a: String(a2), c: shuffle([String(a2 - 1), String(a2), String(a2 + 1)]) },
+          { t: `3. ${iconRepeat("🐟", a3)} 有幾多條魚？`, a: String(a3), c: shuffle([String(a3 - 1), String(a3), String(a3 + 1)]) },
+          { t: `4. ${iconRepeat("⚽", a4)} 有幾多個波？`, a: String(a4), c: shuffle([String(Math.max(0, a4 - 1)), String(a4), String(a4 + 1)]) },
+          { t: `5. ${iconRepeat("🌸", a5)} 有幾多朵花？`, a: String(a5), c: shuffle([String(a5 - 1), String(a5), String(a5 + 1)]) }
+        ]
+      },
+      {
+        title: "B. 比較多與少",
+        questions: [
+          { t: `6. ${iconRepeat("🐤", b6L)} vs ${iconRepeat("🐤", b6R)}，邊一邊比較多？`, a: "左邊", c: ["左邊", "右邊"] },
+          { t: `7. ${iconRepeat("🐰", b7L)} vs ${iconRepeat("🐰", b7R)}，邊一邊比較少？`, a: "左邊", c: ["左邊", "右邊"] },
+          { t: "8. 🍓🍓🍓 比 🍓🍓 ______。", a: "多", c: ["多", "少"] },
+          { t: "9. 🚗🚗 比 🚗🚗🚗 ______。", a: "少", c: ["多", "少"] }
+        ]
+      },
+      {
+        title: "C. 簡單加法",
+        questions: [
+          { t: `10. ${c10a} + ${c10b} = ?`, a: String(c10), c: shuffle([String(c10 - 1), String(c10), String(c10 + 1)]) },
+          { t: `11. ${c11a} + ${c11b} = ?`, a: String(c11), c: shuffle([String(c11 - 1), String(c11), String(c11 + 1)]) },
+          { t: `12. ${c12a} + ${c12b} = ?`, a: String(c12), c: shuffle([String(c12 - 1), String(c12), String(c12 + 1)]) },
+          { t: `13. ${c13a} + ${c13b} = ?`, a: String(c13), c: shuffle([String(c13 - 1), String(c13), String(c13 + 1)]) },
+          { t: `14. 媽媽有 ${c14a} 個橙，又買多 ${c14b} 個橙，一共幾多個？`, a: String(c14), c: shuffle([String(c14 - 1), String(c14), String(c14 + 1)]) }
+        ]
+      },
+      {
+        title: "D. 簡單減法",
+        questions: [
+          { t: `15. ${d15a} - ${d15b} = ?`, a: String(d15), c: shuffle([String(d15 - 1), String(d15), String(d15 + 1)]) },
+          { t: `16. ${d16a} - ${d16b} = ?`, a: String(d16), c: shuffle([String(d16 - 1), String(d16), String(d16 + 1)]) },
+          { t: `17. ${d17a} - ${d17b} = ?`, a: String(d17), c: shuffle([String(d17 - 1), String(d17), String(d17 + 1)]) },
+          { t: `18. 枱上有 ${d18a} 粒糖，小明食咗 ${d18b} 粒，仲有幾多粒？`, a: String(d18), c: shuffle([String(d18 - 1), String(d18), String(d18 + 1)]) }
+        ]
+      },
+      {
+        title: "E. 圖形認識",
+        questions: [
+          { t: "19. 邊個係圓形？", a: "○", c: ["○", "□", "△"] },
+          { t: "20. 邊個係三角形？", a: "△", c: ["□", "△", "○"] },
+          { t: "21. 邊個係正方形？", a: "□", c: ["○", "□", "△"] }
+        ]
+      },
+      {
+        title: "F. 規律題",
+        questions: [
+          { t: "22. ○ △ ○ △ ○ ____ 下一個係？", a: "△", c: ["○", "△", "□"] },
+          { t: "23. □ □ ○ □ □ ○ ____ 下一個係？", a: "□", c: ["○", "□", "△"] },
+          { t: `24. ${f24 - 4}, ${f24 - 3}, ${f24 - 2}, ${f24 - 1}, ____`, a: String(f24), c: shuffle([String(f24), String(f24 + 1), String(f24 + 2)]) },
+          { t: `25. ${f25base}, ${f25base + f25step}, ${f25base + f25step * 2}, ____`, a: String(f25), c: shuffle([String(f25 - 1), String(f25), String(f25 + 1)]) }
+        ]
+      }
+    ];
+    };
+
+    const quiz = document.getElementById('quiz');
+    const renderQuiz = () => {
+      quiz.innerHTML = '';
+      const sections = buildSections();
+      let idx = 0;
+      for (const section of sections) {
+      const box = document.createElement('section');
+      box.className = 'section';
+      const h2 = document.createElement('h2');
+      h2.textContent = section.title;
+      box.appendChild(h2);
+
+      for (const q of section.questions) {
+        idx++;
+        const qWrap = document.createElement('div');
+        qWrap.className = 'q';
+        qWrap.dataset.answer = q.a;
+
+        const head = document.createElement('div');
+        head.className = 'q-head';
+
+        const p = document.createElement('p');
+        p.textContent = q.t;
+
+        const speakBtn = document.createElement('button');
+        speakBtn.type = 'button';
+        speakBtn.className = 'speak-btn';
+        speakBtn.textContent = '🔊 讀題';
+        speakBtn.dataset.text = q.t;
+
+        head.appendChild(p);
+        head.appendChild(speakBtn);
+        qWrap.appendChild(head);
+
+        const choices = document.createElement('div');
+        choices.className = 'choices';
+
+        q.c.forEach((item, i) => {
+          const label = document.createElement('label');
+          label.className = 'choice';
+          if (/^[○△□]$/.test(item.trim())) label.classList.add('symbol-choice');
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `q${idx}`;
+          input.value = item;
+          if (i === 0) input.required = true;
+
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(item));
+          choices.appendChild(label);
+        });
+
+        qWrap.appendChild(choices);
+
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        qWrap.appendChild(fb);
+
+        box.appendChild(qWrap);
+      }
+
+        quiz.appendChild(box);
+      }
+    };
+    renderQuiz();
+
+    const score = document.getElementById('score');
+    const synth = window.speechSynthesis;
+    let voiceCache = [];
+    const loadVoices = () => {
+      voiceCache = synth ? synth.getVoices() : [];
+    };
+    loadVoices();
+    if (synth) synth.addEventListener('voiceschanged', loadVoices);
+
+    const getNaturalVoice = () => {
+      if (!voiceCache.length) return null;
+      return (
+        voiceCache.find(v => v.lang === 'zh-HK') ||
+        voiceCache.find(v => v.lang.startsWith('zh-HK')) ||
+        voiceCache.find(v => v.lang === 'yue-HK') ||
+        voiceCache.find(v => v.lang.startsWith('yue')) ||
+        voiceCache.find(v => v.lang.startsWith('zh')) ||
+        voiceCache[0]
+      );
+    };
+
+    const speakText = text => {
+      if (!synth) return;
+      synth.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/[🍎⭐🐟⚽🌸🐤🐰🍓🚗]/g, ' '));
+      const voice = getNaturalVoice();
+      if (voice) u.voice = voice;
+      u.lang = voice?.lang || 'zh-HK';
+      u.rate = 0.92;
+      u.pitch = 1.0;
+      u.volume = 1;
+      synth.speak(u);
+    };
+
+    quiz.addEventListener('click', e => {
+      const btn = e.target.closest('.speak-btn');
+      if (!btn) return;
+      speakText(btn.dataset.text || '');
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      const blocks = [...document.querySelectorAll('.q')];
+      let correct = 0;
+
+      blocks.forEach(block => {
+        const picked = block.querySelector('input:checked');
+        const answer = block.dataset.answer;
+        const fb = block.querySelector('.feedback');
+
+        if (!picked) {
+          fb.textContent = '請先選一個答案喔～';
+          fb.className = 'feedback bad';
+          return;
+        }
+
+        if (picked.value === answer) {
+          correct++;
+          fb.textContent = '答對啦！好叻！';
+          fb.className = 'feedback ok';
+        } else {
+          fb.textContent = `再試下，正確答案係：${answer}`;
+          fb.className = 'feedback bad';
+        }
+      });
+
+      score.textContent = `你答啱 ${correct} / ${blocks.length} 題 🎉`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      quiz.reset();
+      document.querySelectorAll('.feedback').forEach(f => {
+        f.textContent = '';
+        f.className = 'feedback';
+      });
+      score.textContent = '未交卷';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('randomBtn').addEventListener('click', () => {
+      if (synth) synth.cancel();
+      renderQuiz();
+      score.textContent = '已隨機新題目，請開始作答';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    const rootStyle = document.documentElement.style;
+    const fontSlider = document.getElementById('fontSlider');
+    const setFontSizes = size => {
+      const n = Number(size);
+      rootStyle.setProperty('--question-size', `${n}rem`);
+      rootStyle.setProperty('--choice-size', `${Math.max(1.1, n - 0.18)}rem`);
+    };
+    setFontSizes(fontSlider.value);
+    fontSlider.addEventListener('input', () => setFontSizes(fontSlider.value));
+  </script>
+</body>
+</html>

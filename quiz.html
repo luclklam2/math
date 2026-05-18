@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -120,6 +121,42 @@
       box-shadow: var(--shadow);
       font-weight: 800;
     }
+    .link-btn { background: linear-gradient(180deg, #f2ecff, #e2d6ff); }
+    .picker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffffcc;
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+    .picker select {
+      border-radius: 10px;
+      border: 2px solid #d6e5ff;
+      padding: 6px 8px;
+      font-size: 1rem;
+    }
+    .num-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .num-cell {
+      background: #fff;
+      border: 2px solid #dde7ff;
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
 
     .size-control input[type="range"] {
       width: 170px;
@@ -240,6 +277,60 @@
       line-height: 1;
       letter-spacing: 0.02em;
     }
+    .clock-option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .mini-clock {
+      width: 68px;
+      height: 68px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      position: relative;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .mini-clock .num {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 9px;
+      font-weight: 800;
+      color: #222;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .mini-clock .hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: 50% 100%;
+      border-radius: 999px;
+    }
+    .mini-clock .hour {
+      width: 4px;
+      height: 20px;
+      margin-left: -2px;
+      background: #222;
+    }
+    .mini-clock .minute {
+      width: 3px;
+      height: 27px;
+      margin-left: -1.5px;
+      background: #e33;
+    }
+    .mini-clock .dot {
+      width: 8px;
+      height: 8px;
+      background: #222;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
 
     .choice input { display: none; }
 
@@ -264,6 +355,7 @@
       .wrap { padding: 12px 8px 20px; }
       .q p { font-size: var(--question-size); }
       .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .num-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
 
     @keyframes floaty {
@@ -283,6 +375,7 @@
     <p class="subtitle">適合 4-5 歲小朋友，輕鬆按選擇題學數學</p>
 
     <div class="toolbar">
+      <button type="button" class="link-btn" id="openNumPageBtn">🔢 1-50 數字圖案頁</button>
       <button type="button" id="randomBtn">🎲 隨機新題目</button>
       <div class="size-control">
         <span>🔡</span>
@@ -299,6 +392,46 @@
   </main>
 
   <script>
+    const symbolMap = {
+      apple: "🍎",
+      star: "⭐",
+      fish: "🐟",
+      flower: "🌸",
+      car: "🚗",
+      circle: "⚪"
+    };
+    const buildNumberPage = () => {
+      const html = `<!DOCTYPE html>
+<html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>1-50 數字圖案頁</title>
+<style>
+body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:linear-gradient(150deg,#fff7d6,#dff7ff);padding:16px;color:#2d2a32}
+.wrap{max-width:980px;margin:0 auto;background:#ffffffcc;border:3px dashed #ffc6dc;border-radius:24px;padding:14px}
+h1{margin:6px 0 12px;text-align:center}
+.top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.picker{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px}
+select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1rem}
+.num-grid{margin-top:14px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:1.1rem;min-height:58px;display:flex;align-items:center;justify-content:center;gap:6px}
+@media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+</style></head>
+<body><main class="wrap"><h1>🔢 1-50 數字圖案頁</h1><div class="top"><label class="picker">圖案：
+<select id="shapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option></select>
+</label></div><section id="grid" class="num-grid"></section></main>
+<script>
+const symbolMap=${JSON.stringify(symbolMap)};
+const grid=document.getElementById('grid');
+const sel=document.getElementById('shapeSel');
+function draw(){const s=symbolMap[sel.value]||"⭐";grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';d.textContent=s+" "+i;grid.appendChild(d);}}
+sel.addEventListener('change',draw);draw();
+<\/script></body></html>`;
+      const w = window.open("", "_blank");
+      if (w) {
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+      }
+    };
     const iconRepeat = (icon, n) => Array.from({ length: n }, () => icon).join('');
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
@@ -322,6 +455,23 @@
       const d18a = randInt(4, 8), d18b = randInt(1, Math.min(3, d18a - 1)), d18 = d18a - d18b;
       const f24 = randInt(4, 8);
       const f25step = randInt(2, 3), f25base = randInt(1, 3), f25 = f25base + f25step * 3;
+      const gTimes = [
+        { h: randInt(1, 11), m: 0 },
+        { h: randInt(1, 11), m: 30 },
+        { h: randInt(1, 11), m: 15 },
+        { h: randInt(1, 11), m: 45 },
+        { h: randInt(1, 11), m: [0, 10, 20, 30, 40, 50][randInt(0, 5)] }
+      ];
+      const timeLabel = (h, m) => `${h}時${m}分`;
+      const timeChoices = (h, m) => {
+        const wrong1 = { h: ((h % 12) + 1), m };
+        const wrong2 = { h, m: (m + 30) % 60 };
+        return shuffle([{ h, m }, wrong1, wrong2]).map(t => ({
+          value: timeLabel(t.h, t.m),
+          clock: { h: t.h, m: t.m },
+          text: timeLabel(t.h, t.m)
+        }));
+      };
 
       return [
       {
@@ -378,6 +528,16 @@
           { t: `24. ${f24 - 4}, ${f24 - 3}, ${f24 - 2}, ${f24 - 1}, ____`, a: String(f24), c: shuffle([String(f24), String(f24 + 1), String(f24 + 2)]) },
           { t: `25. ${f25base}, ${f25base + f25step}, ${f25base + f25step * 2}, ____`, a: String(f25), c: shuffle([String(f25 - 1), String(f25), String(f25 + 1)]) }
         ]
+      },
+      {
+        title: "G. 時鐘問題",
+        questions: [
+          { t: `26. 以下邊個時鐘係 ${timeLabel(gTimes[0].h, gTimes[0].m)}？`, a: timeLabel(gTimes[0].h, gTimes[0].m), c: timeChoices(gTimes[0].h, gTimes[0].m) },
+          { t: `27. 以下邊個時鐘係 ${timeLabel(gTimes[1].h, gTimes[1].m)}？`, a: timeLabel(gTimes[1].h, gTimes[1].m), c: timeChoices(gTimes[1].h, gTimes[1].m) },
+          { t: `28. 以下邊個時鐘係 ${timeLabel(gTimes[2].h, gTimes[2].m)}？`, a: timeLabel(gTimes[2].h, gTimes[2].m), c: timeChoices(gTimes[2].h, gTimes[2].m) },
+          { t: `29. 以下邊個時鐘係 ${timeLabel(gTimes[3].h, gTimes[3].m)}？`, a: timeLabel(gTimes[3].h, gTimes[3].m), c: timeChoices(gTimes[3].h, gTimes[3].m) },
+          { t: `30. 以下邊個時鐘係 ${timeLabel(gTimes[4].h, gTimes[4].m)}？`, a: timeLabel(gTimes[4].h, gTimes[4].m), c: timeChoices(gTimes[4].h, gTimes[4].m) }
+        ]
       }
     ];
     };
@@ -422,16 +582,51 @@
         q.c.forEach((item, i) => {
           const label = document.createElement('label');
           label.className = 'choice';
-          if (/^[○△□]$/.test(item.trim())) label.classList.add('symbol-choice');
+          const rawText = typeof item === 'string' ? item : item.value;
+          if (/^[○△□]$/.test(rawText.trim())) label.classList.add('symbol-choice');
 
           const input = document.createElement('input');
           input.type = 'radio';
           input.name = `q${idx}`;
-          input.value = item;
+          input.value = rawText;
           if (i === 0) input.required = true;
 
           label.appendChild(input);
-          label.appendChild(document.createTextNode(item));
+          if (typeof item === 'object' && item.clock) {
+            const wrap = document.createElement('div');
+            wrap.className = 'clock-option';
+            const clock = document.createElement('div');
+            clock.className = 'mini-clock';
+            const hour = document.createElement('span');
+            hour.className = 'hand hour';
+            const minute = document.createElement('span');
+            minute.className = 'hand minute';
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            for (let n = 1; n <= 12; n++) {
+              const num = document.createElement('span');
+              num.className = 'num';
+              num.textContent = String(n);
+              const deg = n * 30;
+              const r = 28;
+              const x = Math.sin((deg * Math.PI) / 180) * r;
+              const y = -Math.cos((deg * Math.PI) / 180) * r;
+              num.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+              clock.appendChild(num);
+            }
+            const minDeg = item.clock.m * 6;
+            const hourDeg = ((item.clock.h % 12) * 30) + (item.clock.m * 0.5);
+            hour.style.transform = `rotate(${hourDeg}deg)`;
+            minute.style.transform = `rotate(${minDeg}deg)`;
+            clock.appendChild(hour);
+            clock.appendChild(minute);
+            clock.appendChild(dot);
+            wrap.appendChild(clock);
+            wrap.appendChild(document.createTextNode(item.text));
+            label.appendChild(wrap);
+          } else {
+            label.appendChild(document.createTextNode(rawText));
+          }
           choices.appendChild(label);
         });
 
@@ -533,6 +728,7 @@
       score.textContent = '已隨機新題目，請開始作答';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+    document.getElementById('openNumPageBtn').addEventListener('click', buildNumberPage);
 
     const rootStyle = document.documentElement.style;
     const fontSlider = document.getElementById('fontSlider');

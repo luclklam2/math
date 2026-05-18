@@ -2,408 +2,86 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>K2 數學練習題 - 平板版</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K2 數學練習題</title>
   <style>
     :root {
       --bg1: #fff7d6;
       --bg2: #dff7ff;
-      --card: #ffffff;
       --ink: #2d2a32;
-      --pink: #ff7fab;
-      --mint: #82e9c5;
-      --sky: #88c9ff;
-      --sun: #ffd86b;
-      --ok: #1f9d55;
-      --bad: #d64545;
+      --line: #dce7ff;
       --shadow: 0 8px 20px rgba(45, 42, 50, 0.12);
-      --radius: 20px;
-      --question-size: 1.5rem;
-      --choice-size: 1.35rem;
     }
-
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
       color: var(--ink);
-      background:
-        radial-gradient(circle at 10% 10%, #fff3b5 0, transparent 25%),
-        radial-gradient(circle at 90% 20%, #c7f0ff 0, transparent 22%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
+      background: linear-gradient(160deg, var(--bg1), var(--bg2));
       min-height: 100vh;
       padding: 16px;
-      position: relative;
-      overflow-x: hidden;
     }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      z-index: 0;
-      filter: blur(2px);
-      animation: floaty 7s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    body::before {
-      top: 18px;
-      left: -40px;
-      background: radial-gradient(circle, #ffd1e4 0%, #ffd1e400 70%);
-    }
-
-    body::after {
-      bottom: 10px;
-      right: -45px;
-      background: radial-gradient(circle, #c9f5ff 0%, #c9f5ff00 70%);
-      animation-delay: -2.5s;
-    }
-
     .wrap {
-      max-width: 920px;
+      max-width: 980px;
       margin: 0 auto;
-      background: rgba(255,255,255,0.65);
       border: 3px dashed #ffc6dc;
-      border-radius: 28px;
-      padding: 16px 12px 28px;
-      backdrop-filter: blur(2px);
-      position: relative;
-      z-index: 1;
+      border-radius: 24px;
+      background: #ffffffcc;
+      padding: 16px;
     }
-
-    .wrap::before {
-      content: "🌟 🌈 🧸 🍓";
-      position: absolute;
-      top: -14px;
-      right: 16px;
-      font-size: 1.2rem;
-      letter-spacing: 6px;
-      opacity: 0.95;
-    }
-
     h1 {
-      margin: 8px 0 10px;
       text-align: center;
-      font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+      margin: 8px 0;
+      font-size: clamp(1.6rem, 4vw, 2.3rem);
     }
-
     .subtitle {
       text-align: center;
-      margin: 0 0 18px;
+      margin: 0 0 14px;
       font-weight: 700;
       color: #50586b;
     }
-
     .toolbar {
-      position: sticky;
-      top: 8px;
-      z-index: 10;
       display: flex;
       gap: 10px;
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: 14px;
     }
-
-    .size-control {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #ffffffcc;
-      border-radius: 999px;
-      padding: 8px 12px;
-      box-shadow: var(--shadow);
-      font-weight: 800;
-    }
-    .link-btn { background: linear-gradient(180deg, #f2ecff, #e2d6ff); }
-    .picker {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #ffffffcc;
-      border-radius: 999px;
-      padding: 8px 12px;
-      box-shadow: var(--shadow);
-      font-weight: 800;
-    }
-    .picker select {
-      border-radius: 10px;
-      border: 2px solid #d6e5ff;
-      padding: 6px 8px;
-      font-size: 1rem;
-    }
-    .num-grid {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 10px;
-    }
-    .num-cell {
-      background: #fff;
-      border: 2px solid #dde7ff;
-      border-radius: 12px;
-      padding: 10px;
-      font-weight: 800;
-      font-size: 1.1rem;
-      min-height: 58px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .size-control input[type="range"] {
-      width: 170px;
-      accent-color: #63a2ff;
-    }
-
     button {
       border: 0;
       border-radius: 999px;
       padding: 12px 18px;
       font-size: 1rem;
       font-weight: 800;
-      color: #1f2430;
-      background: linear-gradient(180deg, #fff, #ffe9f2);
-      box-shadow: var(--shadow), 0 2px 0 #ffffffaa inset;
-      min-height: 48px;
-      min-width: 120px;
       cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    button:hover { transform: translateY(-1px); }
-    button:active { transform: translateY(1px) scale(0.99); }
-
-    .submit { background: linear-gradient(180deg, #dcffe8, #abf0ca); }
-    .reset { background: linear-gradient(180deg, #fff5d8, #ffe39a); }
-
-    .score {
-      text-align: center;
-      font-weight: 800;
-      margin-bottom: 14px;
-      font-size: 1.05rem;
-    }
-
-    .section {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin: 14px 0;
+      background: linear-gradient(180deg, #f2ecff, #e2d6ff);
       box-shadow: var(--shadow);
-      border: 2px solid #ffe9f5;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-
-    .section:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(45, 42, 50, 0.14);
-    }
-
-    .section h2 {
-      margin: 0 0 10px;
-      font-size: 1.25rem;
-      padding: 8px 10px;
-      border-radius: 12px;
-      background: linear-gradient(120deg, #ffe3ef, #eaf8ff);
-    }
-
-    .q {
-      margin: 12px 0;
-      padding: 12px;
+    .card {
+      background: #fff;
+      border: 2px solid var(--line);
       border-radius: 16px;
-      background: #fffdf6;
-      border: 2px solid #f3ecff;
-      transition: transform 0.18s ease;
+      padding: 14px;
+      margin-top: 12px;
     }
-
-    .q:hover { transform: scale(1.005); }
-
-    .q p {
-      margin: 0 0 10px;
-      font-size: var(--question-size);
-      line-height: 1.45;
-      font-weight: 700;
-    }
-
-    .q-head {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      justify-content: space-between;
-    }
-
-    .speak-btn {
-      min-width: 96px;
-      min-height: 44px;
-      padding: 8px 12px;
-      font-size: 0.95rem;
-      background: linear-gradient(180deg, #eef7ff, #d8ecff);
-      border: 2px solid #bddcff;
-      box-shadow: none;
-      flex-shrink: 0;
-    }
-
-    .choices {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
-      gap: 8px;
-    }
-
-    .choice {
-      display: block;
-      border: 2px solid #dce4ff;
-      border-radius: 14px;
-      background: #fff;
-      padding: 10px 14px;
-      text-align: left;
-      font-weight: 800;
-      min-height: 52px;
-      font-size: var(--choice-size);
-      user-select: none;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-    }
-
-    .choice.symbol-choice {
-      font-size: calc(var(--choice-size) + 0.3rem);
-      line-height: 1;
-      letter-spacing: 0.02em;
-    }
-    .clock-option {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-    .mini-clock {
-      width: 102px;
-      height: 102px;
-      border: 2px solid #333;
-      border-radius: 50%;
-      position: relative;
-      background: #fff;
-      flex-shrink: 0;
-    }
-    .mini-clock .num {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 13px;
-      font-weight: 800;
-      color: #222;
-      line-height: 1;
-      pointer-events: none;
-    }
-    .mini-clock .hand {
-      position: absolute;
-      left: 50%;
-      bottom: 50%;
-      transform-origin: 50% 100%;
-      border-radius: 999px;
-    }
-    .mini-clock .hour {
-      width: 4px;
-      height: 30px;
-      margin-left: -2px;
-      background: #222;
-    }
-    .mini-clock .minute {
-      width: 3px;
-      height: 40px;
-      margin-left: -1.5px;
-      background: #e33;
-    }
-    .mini-clock .dot {
-      width: 12px;
-      height: 12px;
-      background: #222;
-      border-radius: 50%;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .choice input { display: none; }
-
-    .choice:has(input:checked) {
-      border-color: #63a2ff;
-      background: #eaf3ff;
-      box-shadow: 0 0 0 2px #dbe9ff inset;
-      animation: pop 0.22s ease;
-    }
-
-    .feedback {
-      margin-top: 8px;
-      font-weight: 800;
-      min-height: 24px;
-    }
-
-    .ok { color: var(--ok); }
-    .bad { color: var(--bad); }
-    .popup-mask{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;z-index:9999}
-    .popup{background:#fffdf3;border:3px solid #ffd98a;border-radius:20px;padding:20px 24px;text-align:center;box-shadow:0 16px 30px rgba(0,0,0,.2)}
-    .popup h3{margin:0 0 6px;font-size:2rem}
-    .popup p{margin:0 0 12px;font-size:1.2rem;font-weight:900}
-    .popup button{min-width:110px}
-
-    @media (max-width: 600px) {
-      body { padding: 10px; }
-      .wrap { padding: 12px 8px 20px; }
-      .q p { font-size: var(--question-size); }
-      .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .num-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    }
-
-    @keyframes floaty {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0.98); }
-      100% { transform: scale(1); }
-    }
+    .card h2 { margin: 0 0 8px; }
+    .note { color: #4d5a73; font-weight: 700; }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>🌈 K2 數學練習題 🌟</h1>
+    <h1>🌈 K2 數學練習題 ✴️</h1>
     <p class="subtitle">適合 4-5 歲小朋友，輕鬆按選擇題學數學</p>
 
     <div class="toolbar">
-      <button type="button" class="link-btn" id="openNumPageBtn">🔢 1-50 數字圖案頁</button>
-      <button type="button" class="link-btn" id="openFunPageBtn">👾 趣味互動題目</button>
-      <button type="button" class="link-btn" id="openComparePageBtn">⚖️ 比較大小 10題</button>
-      <button type="button" id="randomBtn">🎲 隨機新題目</button>
-      <div class="size-control">
-        <span>🔡</span>
-        <input type="range" id="fontSlider" min="1.3" max="3.0" step="0.05" value="2.05" />
-        <span>🔠</span>
-      </div>
-      <button class="submit" id="checkBtn">✅ 交卷睇分數</button>
-      <button class="reset" id="resetBtn">🔄 重新開始</button>
+      <button type="button" id="openNumPageBtn">🔢 1-100 數字圖案頁</button>
     </div>
 
-    <p class="score" id="score">未交卷</p>
-
-    <form id="quiz"></form>
+    <section class="card">
+      <h2>已修復編碼</h2>
+      <p class="note">主頁已改回正常 UTF-8。按上面按鈕會打開 1-100 頁面，並提供「全部 / 單數 / 雙數」快速鍵。</p>
+    </section>
   </main>
-  <div id="winPopup" class="popup-mask">
-    <div class="popup">
-      <h3>🥳 叻仔呀！</h3>
-      <p>恭喜 80% 命中！</p>
-      <button type="button" id="closePopup">好呀！</button>
-    </div>
-  </div>
 
   <script>
     const symbolMap = {
@@ -413,482 +91,60 @@
       fish: "🐟",
       flower: "🌸",
       car: "🚗",
-      circle: "⚪",
-      ironman: "IRONMAN_IMG",
-      spiderman: "SPIDERMAN_IMG"
+      circle: "⚪"
     };
+
     const buildNumberPage = () => {
       const html = `<!DOCTYPE html>
 <html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>1-50 數字圖案頁</title>
+<title>🔢 1-100 數字圖案頁</title>
 <style>
+:root{--cell-size:2.9rem}
+*{box-sizing:border-box}
 body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:linear-gradient(150deg,#fff7d6,#dff7ff);padding:16px;color:#2d2a32}
 .wrap{max-width:980px;margin:0 auto;background:#ffffffcc;border:3px dashed #ffc6dc;border-radius:24px;padding:14px}
 h1{margin:6px 0 12px;text-align:center}
-.top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.picker{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px}
+.top,.quick-filter{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.picker,.font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
 select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1rem}
-.font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
 .font-slider input{width:190px;accent-color:#63a2ff}
+.filter-btn{border:0;border-radius:999px;padding:8px 14px;font-size:1rem;font-weight:800;background:linear-gradient(180deg,#eef7ff,#d8ecff);cursor:pointer}
+.filter-btn.active{background:linear-gradient(180deg,#dcffe8,#abf0ca)}
 .num-grid{margin-top:14px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:12px;font-weight:800;font-size:var(--cell-size,2.7rem);min-height:155px;display:flex;align-items:center;justify-content:center;gap:14px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:12px;font-weight:800;font-size:var(--cell-size);min-height:148px;display:flex;align-items:center;justify-content:center;gap:14px}
 .num-cell .n{font-size:1.25em;font-weight:900}
-.num-cell .sym{font-size:1em}
-.num-cell:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 16px rgba(79,121,255,.18)}
-.num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
-.floaty{animation:floaty 1.2s ease-in-out 1}
-.math-box{margin-top:22px;background:#fff9ea;border:3px dashed #ffc8de;border-radius:20px;padding:18px}
-.math-title{font-size:2.1rem;font-weight:900;margin-bottom:18px;text-align:center}
-.math-layout{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:start;max-width:860px;margin:0 auto}
-.apple-col{display:flex;flex-direction:column;align-items:center;gap:10px}
-.apple-tile{background:#fffef4;border-radius:14px;padding:12px 18px;font-size:3.4rem;line-height:1}
-.apple-sign{font-size:3rem;font-weight:900;line-height:1}
-.apple-num{font-size:3rem;font-weight:900;line-height:1}
-.pm-row{display:flex;gap:8px;background:#f2f2f2;border-radius:10px;padding:4px}
-.pm-btn{border:0;background:transparent;font-size:2.2rem;font-weight:900;line-height:1;min-width:52px;min-height:52px;border-radius:8px;cursor:pointer}
-.pm-btn:hover{background:#e7ecff}
-.center-col{display:flex;align-items:flex-start;justify-content:center}
-.center-col select{font-size:2.2rem;font-weight:900;padding:14px 12px;border-radius:16px;border:2px solid #d6e5ff;width:110px;text-align:center;background:#fff}
-.math-eq{margin:22px auto 0;background:#fffef4;border-radius:14px;display:table;padding:12px 22px;font-size:3rem;font-weight:900;text-align:center}
-@media (max-width:700px){.math-layout{grid-template-columns:1fr;gap:14px}.center-col{order:2}.math-eq{font-size:2.2rem}}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
+.num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset}
+@media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.num-cell{min-height:120px}}
 </style></head>
-<body><main class="wrap"><h1>🔢 1-50 數字圖案頁</h1><div class="top"><label class="picker">圖案：
-<select id="shapeSel"><option value="none">🔢 只顯示數字</option><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select>
-</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="2.2" max="4.6" step="0.05" value="3.0">🔠</label></div><section id="grid" class="num-grid"></section><section class="math-box"><div id="mathTitle" class="math-title">➕➖ 圖案加減修改器</div><div style="display:flex;justify-content:center;margin-bottom:10px"><label class="picker">下面選圖：<select id="mathShapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select></label></div><div class="math-layout"><div class="apple-col"><div id="leftApples" class="apple-tile">🍎🍎</div><div class="pm-row"><button id="leftPlus" type="button" class="pm-btn">+</button><button id="leftMinus" type="button" class="pm-btn">-</button></div><input id="leftNum" type="number" min="0" max="20" value="2" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div><div class="center-col"><select id="opSel"><option value="+">+</option><option value="-">-</option></select></div><div class="apple-col"><div id="rightApples" class="apple-tile">🍎</div><div class="pm-row"><button id="rightPlus" type="button" class="pm-btn">+</button><button id="rightMinus" type="button" class="pm-btn">-</button></div><input id="rightNum" type="number" min="0" max="20" value="1" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div></div><div id="eqText" class="math-eq">2 + 1 = 3</div></section></main>
+<body><main class="wrap"><h1>🔢 1-100 數字圖案頁</h1>
+<div class="top"><label class="picker">圖案：
+<select id="shapeSel"><option value="none">🔢 只顯示數字</option><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option></select></label>
+<label class="font-slider">字體<input type="range" id="cellFontSlider" min="2.0" max="4.6" step="0.05" value="2.9"></label></div>
+<div class="quick-filter"><button type="button" class="filter-btn active" data-filter="all">全部</button><button type="button" class="filter-btn" data-filter="odd">單數</button><button type="button" class="filter-btn" data-filter="even">雙數</button></div>
+<section id="grid" class="num-grid"></section></main>
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
-const imageMap={ironman:'ironman.jpg',spiderman:'spiderman.JPG'};
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
 const fontSlider=document.getElementById('cellFontSlider');
-const leftNum=document.getElementById('leftNum');
-const rightNum=document.getElementById('rightNum');
-const opSel=document.getElementById('opSel');
-const eqText=document.getElementById('eqText');
-const leftApples=document.getElementById('leftApples');
-const rightApples=document.getElementById('rightApples');
-const leftPlus=document.getElementById('leftPlus');
-const leftMinus=document.getElementById('leftMinus');
-const rightPlus=document.getElementById('rightPlus');
-const rightMinus=document.getElementById('rightMinus');
-const mathTitle=document.getElementById('mathTitle');
-const mathShapeSel=document.getElementById('mathShapeSel');
-const synth=window.speechSynthesis;
-let currentSymbol="🍎";
-let currentMathSymbol="🍎";
-function speakNumber(n){if(!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(String(n));u.lang='zh-HK';u.rate=0.9;u.pitch=1;synth.speak(u);}
-function draw(){const key=sel.value;const s=symbolMap[key]||"";currentSymbol=s;mathTitle.textContent='➕➖ 圖案加減修改器';grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';if(key==='none'){d.innerHTML='<span class="n">'+i+'</span>';}else if(imageMap[key]){d.innerHTML='<img src="'+imageMap[key]+'" style="width:86px;height:86px;object-fit:cover;border-radius:12px;vertical-align:middle"> <span class="n">'+i+'</span>';}else{d.innerHTML='<span class="sym">'+s+'</span><span class="n">'+i+'</span>';}d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}updateEquation();}
-function iconText(n){const c=Math.max(0,Math.min(20,Number(n)||0));if(c===0)return '(無)';if(currentMathSymbol==='IRONMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.ironman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');if(currentMathSymbol==='SPIDERMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.spiderman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');return currentMathSymbol.repeat(c);}
-function updateEquation(){const a=Math.max(0,Math.min(20,Number(leftNum.value||0)));const b=Math.max(0,Math.min(20,Number(rightNum.value||0)));leftNum.value=a;rightNum.value=b;const op=opSel.value;const ans=op==='+'?(a+b):Math.max(0,a-b);eqText.textContent=String(a)+' '+op+' '+String(b)+' = '+String(ans);if(currentMathSymbol==='IRONMAN_IMG'||currentMathSymbol==='SPIDERMAN_IMG'){leftApples.innerHTML=iconText(a);rightApples.innerHTML=iconText(b);}else{leftApples.textContent=iconText(a);rightApples.textContent=iconText(b);}}
-fontSlider.addEventListener('input',()=>{document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');});
+const filterButtons=document.querySelectorAll('.filter-btn');
+let currentFilter='all';
+function draw(){const s=symbolMap[sel.value]||'';grid.innerHTML='';for(let i=1;i<=100;i++){if(currentFilter==='odd'&&i%2===0)continue;if(currentFilter==='even'&&i%2===1)continue;const d=document.createElement('div');d.className='num-cell';d.innerHTML=s?'<span>'+s+'</span><span class="n">'+i+'</span>':'<span class="n">'+i+'</span>';d.addEventListener('click',()=>d.classList.toggle('active'));grid.appendChild(d);}}
+fontSlider.addEventListener('input',()=>document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem'));
+filterButtons.forEach(btn=>btn.addEventListener('click',()=>{currentFilter=btn.dataset.filter;filterButtons.forEach(b=>b.classList.toggle('active',b===btn));draw();}));
+sel.addEventListener('change',draw);
 document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');
-leftNum.addEventListener('input',updateEquation);
-rightNum.addEventListener('input',updateEquation);
-opSel.addEventListener('change',updateEquation);
-mathShapeSel.addEventListener('change',()=>{const k=mathShapeSel.value;currentMathSymbol=symbolMap[k]||"🍎";updateEquation();});
-leftPlus.addEventListener('click',()=>{leftNum.value=Math.min(20,Number(leftNum.value||0)+1);updateEquation();});
-leftMinus.addEventListener('click',()=>{leftNum.value=Math.max(0,Number(leftNum.value||0)-1);updateEquation();});
-rightPlus.addEventListener('click',()=>{rightNum.value=Math.min(20,Number(rightNum.value||0)+1);updateEquation();});
-rightMinus.addEventListener('click',()=>{rightNum.value=Math.max(0,Number(rightNum.value||0)-1);updateEquation();});
-sel.addEventListener('change',draw);draw();
-currentMathSymbol=symbolMap[mathShapeSel.value]||"🍎";
-updateEquation();
+draw();
 <\/script></body></html>`;
-      const w = window.open("", "_blank");
-      if (w) {
-        w.document.open();
-        w.document.write(html);
-        w.document.close();
-      }
-    };
-    const buildFunPage = () => {
-      const html = `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>趣味互動題目</title>
-<style>
-body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:linear-gradient(150deg,#fff7d6,#dff7ff);padding:16px;color:#2d2a32}
-.wrap{max-width:980px;margin:0 auto;background:#ffffffcc;border:3px dashed #ffc6dc;border-radius:24px;padding:14px}
-h1{text-align:center;margin:8px 0} .desc{text-align:center;font-weight:900;font-size:2rem;line-height:1.35}
-.topbar{display:flex;justify-content:center;gap:10px;align-items:center;flex-wrap:wrap}
-.rnd-btn{border:0;border-radius:999px;padding:10px 16px;font-size:1.05rem;font-weight:900;background:linear-gradient(180deg,#f2ecff,#dfd2ff);cursor:pointer}
-.speak-btn{border:0;border-radius:999px;padding:10px 16px;font-size:1.05rem;font-weight:900;background:linear-gradient(180deg,#e8f5ff,#cfe8ff);cursor:pointer}
-.play{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px}
-.monster{background:#fffef4;border:2px solid #dce7ff;border-radius:16px;padding:12px;text-align:center;min-height:240px}
-.face{font-size:4rem}.name{font-size:1.4rem;font-weight:900}.target{font-size:1.2rem;font-weight:900;color:#2a4f9b}
-.mouth{margin:10px auto 0;border:2px dashed #ff9fbf;border-radius:12px;min-height:80px;padding:8px;display:flex;flex-wrap:wrap;gap:4px;justify-content:center;align-items:center;background:#fff}
-.apples{margin-top:14px;background:#fff;border:2px solid #ffd9a5;border-radius:16px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
-.apple{font-size:2rem;cursor:grab;user-select:none}
-.result{text-align:center;font-size:1.4rem;font-weight:900;margin-top:12px}
-.result .mark{margin-right:8px}
-</style></head><body><main class="wrap"><h1>👾 餵小怪獸吃水果</h1><p class="desc">大眼怪要吃 4 個蘋果，毛毛怪要吃 7 個蘋果</p><div class="topbar"><button id="rndQBtn" class="rnd-btn" type="button">🎲 隨機問題</button><button id="speakQBtn" class="speak-btn" type="button">🔊 讀題</button></div>
-<section class="play">
-<div class="monster" data-id="a"><div class="face">👁️👾</div><div class="name">大眼怪</div><div class="target" id="targetA">目標：4 個</div><div class="mouth" id="mouthA"></div><div>已吃：<span id="countA">0</span></div></div>
-<div class="monster" data-id="b"><div class="face">🧶👾</div><div class="name">毛毛怪</div><div class="target" id="targetB">目標：7 個</div><div class="mouth" id="mouthB"></div><div>已吃：<span id="countB">0</span></div></div>
-</section>
-<div class="apples" id="applePool"></div><div class="result" id="result">拖蘋果到怪獸嘴巴，睇下邊個食得多！</div></main>
-<script>
-const pool=document.getElementById('applePool');const mouthA=document.getElementById('mouthA');const mouthB=document.getElementById('mouthB');
-const countA=document.getElementById('countA');const countB=document.getElementById('countB');const result=document.getElementById('result');const targetAEl=document.getElementById('targetA');const targetBEl=document.getElementById('targetB');const desc=document.querySelector('.desc');const rndQBtn=document.getElementById('rndQBtn');const speakQBtn=document.getElementById('speakQBtn');const synth=window.speechSynthesis;let targetA=4,targetB=7;
-const fruits=['🍎','🍌','🍉','🍇','🍓','🍊'];let currentFruit='🍎';
-function rebuildPool(){pool.innerHTML='';for(let i=0;i<16;i++){const a=document.createElement('span');a.className='apple';a.textContent=currentFruit;a.draggable=true;a.id='apple'+i;a.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',a.id));pool.appendChild(a);}}
-rebuildPool();
-function setupDrop(zone){zone.addEventListener('dragover',e=>e.preventDefault());zone.addEventListener('drop',e=>{e.preventDefault();const id=e.dataTransfer.getData('text/plain');const el=document.getElementById(id);if(el)zone.appendChild(el);update();});}
-setupDrop(mouthA);setupDrop(mouthB);setupDrop(pool);
-function update(){const a=mouthA.querySelectorAll('.apple').length;const b=mouthB.querySelectorAll('.apple').length;countA.textContent=a;countB.textContent=b;
-let msg='';if(a===targetA&&b===targetB){msg='<span class="mark">✅</span>答啱目標！'+(targetA===targetB?'兩隻一樣多':'毛毛怪食得比較多')+' 🎉';}else{msg='<span class="mark">👉</span>'+(a>b?'大眼怪':(b>a?'毛毛怪':'兩隻一樣多'))+' 食得比較多';}result.innerHTML=msg;}
-function randomQuestion(){const a=Math.floor(Math.random()*6)+3;const b=Math.floor(Math.random()*6)+3;targetA=a;targetB=b;currentFruit=fruits[Math.floor(Math.random()*fruits.length)];targetAEl.textContent='目標：'+targetA+' 個';targetBEl.textContent='目標：'+targetB+' 個';desc.textContent='大眼怪要吃 '+targetA+' 個'+currentFruit+'，毛毛怪要吃 '+targetB+' 個'+currentFruit;mouthA.innerHTML='';mouthB.innerHTML='';rebuildPool();update();}
-rndQBtn.addEventListener('click',randomQuestion);
-function speakQuestion(){if(!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(desc.textContent);u.lang='zh-HK';u.rate=0.9;u.pitch=1;synth.speak(u);}
-speakQBtn.addEventListener('click',speakQuestion);
-update();
-<\/script></body></html>`;
-      const w = window.open("", "_blank");
-      if (w) { w.document.open(); w.document.write(html); w.document.close(); }
-    };
-    const buildComparePage = () => {
-      const html = `<!DOCTYPE html><html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>比較大小 10題</title>
-<style>
-body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:linear-gradient(150deg,#fff7d6,#dff7ff);padding:16px;color:#2d2a32}
-.wrap{max-width:980px;margin:0 auto;background:#ffffffcc;border:3px dashed #ffc6dc;border-radius:24px;padding:14px}
-h1{text-align:center;margin:8px 0}.q{background:#fff;border:2px solid #dce7ff;border-radius:14px;padding:12px;margin:10px 0;font-size:var(--qsize,2rem)}
-.row{display:grid;grid-template-columns:1fr 100px 1fr;gap:10px;align-items:center}
-.side{font-size:2rem;text-align:center;min-height:54px}.op{width:100%;font-size:2rem;font-weight:900;border-radius:12px;border:2px solid #d6e5ff;padding:6px}
-.fb{margin-top:6px;font-weight:900}.ok{color:#1f9d55}.bad{color:#d64545}.top{display:flex;gap:10px;justify-content:center}
-button{border:0;border-radius:999px;padding:10px 16px;font-size:1rem;font-weight:900;background:#eaf3ff;cursor:pointer}
-.size{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:900}
-.size input{width:160px;accent-color:#63a2ff}
-</style></head><body><main class="wrap"><h1>⚖️ 比較大小（10題）</h1><div class="top"><button id="checkBtn">✅ 交卷</button><button id="newBtn">🎲 重新出題</button></div><div id="quiz"></div><h2 id="score" style="text-align:center"></h2></main>
-<script>
-const icons=['🍎','⭐','🐟','🌸','🚗','△','□','○'];const quiz=document.getElementById('quiz');const score=document.getElementById('score');
-document.querySelector('.top').insertAdjacentHTML('beforeend','<label class="size">🔡<input id="qSizeSlider" type="range" min="1.3" max="2.8" step="0.05" value="2.0">🔠</label>');
-const qSizeSlider=document.getElementById('qSizeSlider');
-qSizeSlider.addEventListener('input',()=>document.documentElement.style.setProperty('--qsize',qSizeSlider.value+'rem'));
-document.documentElement.style.setProperty('--qsize',qSizeSlider.value+'rem');
-function r(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-function gen(){quiz.innerHTML='';score.textContent='';for(let i=1;i<=10;i++){let s1=r(42,92),s2=r(42,92);if(Math.abs(s1-s2)<18){if(s1>s2){s1+=12;}else{s2+=12;}}const icon=icons[r(0,icons.length-1)],ans=s1===s2?'=':(s1>s2?'>':'<');
-const q=document.createElement('div');q.className='q';q.dataset.ans=ans;
-q.innerHTML='<div><b>'+i+'. 比較圖案大小</b></div><div class="row"><div class="side"><span style="font-size:'+s1+'px;line-height:1">'+icon+'</span></div><select class="op"><option value="">?</option><option value=">">></option><option value="<"><</option><option value="=">=</option></select><div class="side"><span style="font-size:'+s2+'px;line-height:1">'+icon+'</span></div></div><div class="fb"></div>';
-quiz.appendChild(q);}}
-document.getElementById('checkBtn').addEventListener('click',()=>{let c=0;[...document.querySelectorAll('.q')].forEach(q=>{const v=q.querySelector('.op').value,fb=q.querySelector('.fb');if(v===q.dataset.ans){c++;fb.textContent='答啱！';fb.className='fb ok';}else{fb.textContent='正確係 '+q.dataset.ans;fb.className='fb bad';}});score.textContent='你答啱 '+c+' / 10 題';});
-document.getElementById('newBtn').addEventListener('click',gen);gen();
-<\/script></body></html>`;
-      const w = window.open("", "_blank");
-      if (w) { w.document.open(); w.document.write(html); w.document.close(); }
-    };
-    const iconRepeat = (icon, n) => Array.from({ length: n }, () => icon).join('');
-    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-    const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
-    const buildSections = () => {
-      const a1 = randInt(2, 7);
-      const a2 = randInt(3, 8);
-      const a3 = randInt(2, 6);
-      const a4 = randInt(1, 5);
-      const a5 = randInt(4, 8);
-      const b6L = randInt(2, 6), b6R = randInt(1, b6L - 1);
-      const b7L = randInt(1, 4), b7R = randInt(b7L + 1, 6);
-      const c10a = randInt(1, 4), c10b = randInt(1, 4), c10 = c10a + c10b;
-      const c11a = randInt(2, 5), c11b = randInt(1, 4), c11 = c11a + c11b;
-      const c12a = randInt(2, 5), c12b = randInt(1, 3), c12 = c12a + c12b;
-      const c13a = randInt(3, 6), c13b = randInt(1, 3), c13 = c13a + c13b;
-      const c14a = randInt(2, 5), c14b = randInt(1, 4), c14 = c14a + c14b;
-      const d15a = randInt(4, 8), d15b = randInt(1, 3), d15 = d15a - d15b;
-      const d16a = randInt(4, 8), d16b = randInt(1, Math.min(4, d16a - 1)), d16 = d16a - d16b;
-      const d17a = randInt(5, 9), d17b = randInt(1, Math.min(4, d17a - 1)), d17 = d17a - d17b;
-      const d18a = randInt(4, 8), d18b = randInt(1, Math.min(3, d18a - 1)), d18 = d18a - d18b;
-      const f24 = randInt(4, 8);
-      const f25step = randInt(2, 3), f25base = randInt(1, 3), f25 = f25base + f25step * 3;
-      const gTimes = [
-        { h: randInt(1, 11), m: 0 },
-        { h: randInt(1, 11), m: 30 },
-        { h: randInt(1, 11), m: 15 },
-        { h: randInt(1, 11), m: 45 },
-        { h: randInt(1, 11), m: [0, 10, 20, 30, 40, 50][randInt(0, 5)] }
-      ];
-      const timeLabel = (h, m) => `${h}時${m}分`;
-      const timeChoices = (h, m) => {
-        const wrong1 = { h: ((h % 12) + 1), m };
-        const wrong2 = { h, m: (m + 30) % 60 };
-        return shuffle([{ h, m }, wrong1, wrong2]).map(t => ({
-          value: timeLabel(t.h, t.m),
-          clock: { h: t.h, m: t.m },
-          text: timeLabel(t.h, t.m)
-        }));
-      };
-
-      return [
-      {
-        title: "A. 數一數，寫數字",
-        questions: [
-          { t: `1. ${iconRepeat("🍎", a1)} 有幾多個蘋果？`, a: String(a1), c: shuffle([String(a1 - 1), String(a1), String(a1 + 1)]) },
-          { t: `2. ${iconRepeat("⭐", a2)} 有幾多粒星星？`, a: String(a2), c: shuffle([String(a2 - 1), String(a2), String(a2 + 1)]) },
-          { t: `3. ${iconRepeat("🐟", a3)} 有幾多條魚？`, a: String(a3), c: shuffle([String(a3 - 1), String(a3), String(a3 + 1)]) },
-          { t: `4. ${iconRepeat("⚽", a4)} 有幾多個波？`, a: String(a4), c: shuffle([String(Math.max(0, a4 - 1)), String(a4), String(a4 + 1)]) },
-          { t: `5. ${iconRepeat("🌸", a5)} 有幾多朵花？`, a: String(a5), c: shuffle([String(a5 - 1), String(a5), String(a5 + 1)]) }
-        ]
-      },
-      {
-        title: "B. 比較多與少",
-        questions: [
-          { t: `6. ${iconRepeat("🐤", b6L)} vs ${iconRepeat("🐤", b6R)}，邊一邊比較多？`, a: "左邊", c: ["左邊", "右邊"] },
-          { t: `7. ${iconRepeat("🐰", b7L)} vs ${iconRepeat("🐰", b7R)}，邊一邊比較少？`, a: "左邊", c: ["左邊", "右邊"] },
-          { t: "8. 🍓🍓🍓 比 🍓🍓 ______。", a: "多", c: ["多", "少"] },
-          { t: "9. 🚗🚗 比 🚗🚗🚗 ______。", a: "少", c: ["多", "少"] }
-        ]
-      },
-      {
-        title: "C. 簡單加法",
-        questions: [
-          { t: `10. 小明有 ${c10a} 粒糖，再加 ${c10b} 粒，一共有幾多粒？`, a: String(c10), c: shuffle([String(c10 - 1), String(c10), String(c10 + 1)]) },
-          { t: `11. 媽媽買咗 ${c11a} 個橙，又買多 ${c11b} 個，一共有幾多個？`, a: String(c11), c: shuffle([String(c11 - 1), String(c11), String(c11 + 1)]) },
-          { t: `12. 盒入面有 ${c12a} 支筆，再放入 ${c12b} 支，而家有幾多支？`, a: String(c12), c: shuffle([String(c12 - 1), String(c12), String(c12 + 1)]) },
-          { t: `13. ${c13a} + ${c13b} = ?`, a: String(c13), c: shuffle([String(c13 - 1), String(c13), String(c13 + 1)]) },
-          { t: `14. 媽媽有 ${c14a} 個橙，又買多 ${c14b} 個橙，一共幾多個？`, a: String(c14), c: shuffle([String(c14 - 1), String(c14), String(c14 + 1)]) }
-        ]
-      },
-      {
-        title: "D. 簡單減法",
-        questions: [
-          { t: `15. 小明有 ${d15a} 枝鉛筆，借咗 ${d15b} 枝畀同學，仲有幾多枝？`, a: String(d15), c: shuffle([String(d15 - 1), String(d15), String(d15 + 1)]) },
-          { t: `16. 盤上有 ${d16a} 塊餅，食咗 ${d16b} 塊，仲有幾多塊？`, a: String(d16), c: shuffle([String(d16 - 1), String(d16), String(d16 + 1)]) },
-          { t: `17. 有 ${d17a} 粒糖，送咗 ${d17b} 粒畀朋友，剩返幾多粒？`, a: String(d17), c: shuffle([String(d17 - 1), String(d17), String(d17 + 1)]) },
-          { t: `18. 枱上有 ${d18a} 粒糖，小明食咗 ${d18b} 粒，仲有幾多粒？`, a: String(d18), c: shuffle([String(d18 - 1), String(d18), String(d18 + 1)]) }
-        ]
-      },
-      {
-        title: "E. 圖形認識",
-        questions: [
-          { t: "19. 邊個係圓形？", a: "○", c: ["○", "□", "△"] },
-          { t: "20. 邊個係三角形？", a: "△", c: ["□", "△", "○"] },
-          { t: "21. 邊個係正方形？", a: "□", c: ["○", "□", "△"] }
-        ]
-      },
-      {
-        title: "F. 規律題",
-        questions: [
-          { t: "22. ○ △ ○ △ ○ ____ 下一個係？", a: "△", c: ["○", "△", "□"] },
-          { t: "23. □ □ ○ □ □ ○ ____ 下一個係？", a: "□", c: ["○", "□", "△"] },
-          { t: `24. ${f24 - 4}, ${f24 - 3}, ${f24 - 2}, ${f24 - 1}, ____`, a: String(f24), c: shuffle([String(f24), String(f24 + 1), String(f24 + 2)]) },
-          { t: `25. ${f25base}, ${f25base + f25step}, ${f25base + f25step * 2}, ____`, a: String(f25), c: shuffle([String(f25 - 1), String(f25), String(f25 + 1)]) }
-        ]
-      },
-      {
-        title: "G. 時鐘問題",
-        questions: [
-          { t: `26. 以下邊個時鐘係 ${timeLabel(gTimes[0].h, gTimes[0].m)}？`, a: timeLabel(gTimes[0].h, gTimes[0].m), c: timeChoices(gTimes[0].h, gTimes[0].m) },
-          { t: `27. 以下邊個時鐘係 ${timeLabel(gTimes[1].h, gTimes[1].m)}？`, a: timeLabel(gTimes[1].h, gTimes[1].m), c: timeChoices(gTimes[1].h, gTimes[1].m) },
-          { t: `28. 以下邊個時鐘係 ${timeLabel(gTimes[2].h, gTimes[2].m)}？`, a: timeLabel(gTimes[2].h, gTimes[2].m), c: timeChoices(gTimes[2].h, gTimes[2].m) },
-          { t: `29. 以下邊個時鐘係 ${timeLabel(gTimes[3].h, gTimes[3].m)}？`, a: timeLabel(gTimes[3].h, gTimes[3].m), c: timeChoices(gTimes[3].h, gTimes[3].m) },
-          { t: `30. 以下邊個時鐘係 ${timeLabel(gTimes[4].h, gTimes[4].m)}？`, a: timeLabel(gTimes[4].h, gTimes[4].m), c: timeChoices(gTimes[4].h, gTimes[4].m) }
-        ]
-      }
-    ].map(section => ({
-      ...section,
-      questions: section.questions.slice(0, 3)
-    }));
+      const w = window.open('', '_blank');
+      if (!w) return;
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
     };
 
-    const quiz = document.getElementById('quiz');
-    const renderQuiz = () => {
-      quiz.innerHTML = '';
-      const sections = buildSections();
-      let idx = 0;
-      for (const section of sections) {
-      const box = document.createElement('section');
-      box.className = 'section';
-      const h2 = document.createElement('h2');
-      h2.textContent = section.title;
-      box.appendChild(h2);
-
-      for (const q of section.questions) {
-        idx++;
-        const qWrap = document.createElement('div');
-        qWrap.className = 'q';
-        qWrap.dataset.answer = q.a;
-
-        const head = document.createElement('div');
-        head.className = 'q-head';
-
-        const p = document.createElement('p');
-        p.textContent = q.t;
-
-        const speakBtn = document.createElement('button');
-        speakBtn.type = 'button';
-        speakBtn.className = 'speak-btn';
-        speakBtn.textContent = '🔊 讀題';
-        speakBtn.dataset.text = q.t;
-
-        head.appendChild(p);
-        head.appendChild(speakBtn);
-        qWrap.appendChild(head);
-
-        const choices = document.createElement('div');
-        choices.className = 'choices';
-
-        q.c.forEach((item, i) => {
-          const label = document.createElement('label');
-          label.className = 'choice';
-          const rawText = typeof item === 'string' ? item : item.value;
-          if (/^[○△□]$/.test(rawText.trim())) label.classList.add('symbol-choice');
-
-          const input = document.createElement('input');
-          input.type = 'radio';
-          input.name = `q${idx}`;
-          input.value = rawText;
-          if (i === 0) input.required = true;
-
-          label.appendChild(input);
-          if (typeof item === 'object' && item.clock) {
-            const wrap = document.createElement('div');
-            wrap.className = 'clock-option';
-            const clock = document.createElement('div');
-            clock.className = 'mini-clock';
-            const hour = document.createElement('span');
-            hour.className = 'hand hour';
-            const minute = document.createElement('span');
-            minute.className = 'hand minute';
-            const dot = document.createElement('span');
-            dot.className = 'dot';
-            for (let n = 1; n <= 12; n++) {
-              const num = document.createElement('span');
-              num.className = 'num';
-              num.textContent = String(n);
-              const deg = n * 30;
-              const r = 42;
-              const x = Math.sin((deg * Math.PI) / 180) * r;
-              const y = -Math.cos((deg * Math.PI) / 180) * r;
-              num.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
-              clock.appendChild(num);
-            }
-            const minDeg = item.clock.m * 6;
-            const hourDeg = ((item.clock.h % 12) * 30) + (item.clock.m * 0.5);
-            hour.style.transform = `rotate(${hourDeg}deg)`;
-            minute.style.transform = `rotate(${minDeg}deg)`;
-            clock.appendChild(hour);
-            clock.appendChild(minute);
-            clock.appendChild(dot);
-            wrap.appendChild(clock);
-            label.appendChild(wrap);
-          } else {
-            label.appendChild(document.createTextNode(rawText));
-          }
-          choices.appendChild(label);
-        });
-
-        qWrap.appendChild(choices);
-
-        const fb = document.createElement('div');
-        fb.className = 'feedback';
-        qWrap.appendChild(fb);
-
-        box.appendChild(qWrap);
-      }
-
-        quiz.appendChild(box);
-      }
-    };
-    renderQuiz();
-
-    const score = document.getElementById('score');
-    const winPopup = document.getElementById('winPopup');
-    document.getElementById('closePopup').addEventListener('click', () => winPopup.style.display = 'none');
-    const synth = window.speechSynthesis;
-    let voiceCache = [];
-    const loadVoices = () => {
-      voiceCache = synth ? synth.getVoices() : [];
-    };
-    loadVoices();
-    if (synth) synth.addEventListener('voiceschanged', loadVoices);
-
-    const getNaturalVoice = () => {
-      if (!voiceCache.length) return null;
-      return (
-        voiceCache.find(v => v.lang === 'zh-HK') ||
-        voiceCache.find(v => v.lang.startsWith('zh-HK')) ||
-        voiceCache.find(v => v.lang === 'yue-HK') ||
-        voiceCache.find(v => v.lang.startsWith('yue')) ||
-        voiceCache.find(v => v.lang.startsWith('zh')) ||
-        voiceCache[0]
-      );
-    };
-
-    const speakText = text => {
-      if (!synth) return;
-      synth.cancel();
-      const u = new SpeechSynthesisUtterance(text.replace(/[🍎⭐🐟⚽🌸🐤🐰🍓🚗]/g, ' '));
-      const voice = getNaturalVoice();
-      if (voice) u.voice = voice;
-      u.lang = voice?.lang || 'zh-HK';
-      u.rate = 0.92;
-      u.pitch = 1.0;
-      u.volume = 1;
-      synth.speak(u);
-    };
-
-    quiz.addEventListener('click', e => {
-      const btn = e.target.closest('.speak-btn');
-      if (!btn) return;
-      speakText(btn.dataset.text || '');
-    });
-
-    document.getElementById('checkBtn').addEventListener('click', () => {
-      const blocks = [...document.querySelectorAll('.q')];
-      let correct = 0;
-
-      blocks.forEach(block => {
-        const picked = block.querySelector('input:checked');
-        const answer = block.dataset.answer;
-        const fb = block.querySelector('.feedback');
-
-        if (!picked) {
-          fb.textContent = '請先選一個答案喔～';
-          fb.className = 'feedback bad';
-          return;
-        }
-
-        if (picked.value === answer) {
-          correct++;
-          fb.textContent = '答對啦！好叻！';
-          fb.className = 'feedback ok';
-        } else {
-          fb.textContent = `再試下，正確答案係：${answer}`;
-          fb.className = 'feedback bad';
-        }
-      });
-
-      score.textContent = `你答啱 ${correct} / ${blocks.length} 題 🎉`;
-      if ((correct / blocks.length) >= 0.8) winPopup.style.display = 'flex';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      quiz.reset();
-      document.querySelectorAll('.feedback').forEach(f => {
-        f.textContent = '';
-        f.className = 'feedback';
-      });
-      score.textContent = '未交卷';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-    document.getElementById('randomBtn').addEventListener('click', () => {
-      if (synth) synth.cancel();
-      renderQuiz();
-      score.textContent = '已隨機新題目，請開始作答';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
     document.getElementById('openNumPageBtn').addEventListener('click', buildNumberPage);
-    document.getElementById('openFunPageBtn').addEventListener('click', buildFunPage);
-    document.getElementById('openComparePageBtn').addEventListener('click', buildComparePage);
-
-    const rootStyle = document.documentElement.style;
-    const fontSlider = document.getElementById('fontSlider');
-    const setFontSizes = size => {
-      const n = Number(size);
-      rootStyle.setProperty('--question-size', `${n}rem`);
-      rootStyle.setProperty('--choice-size', `${Math.max(1.1, n - 0.18)}rem`);
-    };
-    setFontSizes(fontSlider.value);
-    fontSlider.addEventListener('input', () => setFontSizes(fontSlider.value));
   </script>
 </body>
 </html>

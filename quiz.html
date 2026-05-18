@@ -411,18 +411,27 @@ h1{margin:6px 0 12px;text-align:center}
 .top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .picker{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px}
 select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1rem}
+.font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
+.font-slider input{width:170px;accent-color:#63a2ff}
 .num-grid{margin-top:14px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:1.1rem;min-height:58px;display:flex;align-items:center;justify-content:center;gap:6px}
+.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:var(--cell-size,1.3rem);min-height:64px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+.num-cell:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 16px rgba(79,121,255,.18)}
+.num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
+.floaty{animation:floaty 3.2s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
 </style></head>
 <body><main class="wrap"><h1>🔢 1-50 數字圖案頁</h1><div class="top"><label class="picker">圖案：
 <select id="shapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option></select>
-</label></div><section id="grid" class="num-grid"></section></main>
+</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="1.1" max="2.3" step="0.05" value="1.35">🔠</label></div><section id="grid" class="num-grid"></section></main>
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
-function draw(){const s=symbolMap[sel.value]||"⭐";grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';d.textContent=s+" "+i;grid.appendChild(d);}}
+const fontSlider=document.getElementById('cellFontSlider');
+function draw(){const s=symbolMap[sel.value]||"⭐";grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell floaty';d.style.animationDelay=(i*0.04)+'s';d.textContent=s+" "+i;d.addEventListener('click',()=>d.classList.toggle('active'));grid.appendChild(d);}}
+fontSlider.addEventListener('input',()=>{document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');});
+document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');
 sel.addEventListener('change',draw);draw();
 <\/script></body></html>`;
       const w = window.open("", "_blank");

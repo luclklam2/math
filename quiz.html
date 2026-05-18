@@ -407,6 +407,7 @@
 
   <script>
     const symbolMap = {
+      none: "",
       apple: "🍎",
       star: "⭐",
       fish: "🐟",
@@ -430,7 +431,9 @@ select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1re
 .font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
 .font-slider input{width:190px;accent-color:#63a2ff}
 .num-grid{margin-top:14px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:var(--cell-size,1.8rem);min-height:110px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:12px;font-weight:800;font-size:var(--cell-size,2.7rem);min-height:155px;display:flex;align-items:center;justify-content:center;gap:14px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+.num-cell .n{font-size:1.25em;font-weight:900}
+.num-cell .sym{font-size:1em}
 .num-cell:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 16px rgba(79,121,255,.18)}
 .num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
 .floaty{animation:floaty 1.2s ease-in-out 1}
@@ -452,8 +455,8 @@ select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1re
 @media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
 </style></head>
 <body><main class="wrap"><h1>🔢 1-50 數字圖案頁</h1><div class="top"><label class="picker">圖案：
-<select id="shapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select>
-</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="1.5" max="3.2" step="0.05" value="2.35">🔠</label></div><section id="grid" class="num-grid"></section><section class="math-box"><div id="mathTitle" class="math-title">➕➖ 圖案加減修改器</div><div class="math-layout"><div class="apple-col"><div id="leftApples" class="apple-tile">🍎🍎</div><div class="pm-row"><button id="leftPlus" type="button" class="pm-btn">+</button><button id="leftMinus" type="button" class="pm-btn">-</button></div><input id="leftNum" type="number" min="0" max="20" value="2" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div><div class="center-col"><select id="opSel"><option value="+">+</option><option value="-">-</option></select></div><div class="apple-col"><div id="rightApples" class="apple-tile">🍎</div><div class="pm-row"><button id="rightPlus" type="button" class="pm-btn">+</button><button id="rightMinus" type="button" class="pm-btn">-</button></div><input id="rightNum" type="number" min="0" max="20" value="1" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div></div><div id="eqText" class="math-eq">2 + 1 = 3</div></section></main>
+<select id="shapeSel"><option value="none">🔢 只顯示數字</option><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select>
+</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="2.2" max="4.6" step="0.05" value="3.0">🔠</label></div><section id="grid" class="num-grid"></section><section class="math-box"><div id="mathTitle" class="math-title">➕➖ 圖案加減修改器</div><div style="display:flex;justify-content:center;margin-bottom:10px"><label class="picker">下面選圖：<select id="mathShapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select></label></div><div class="math-layout"><div class="apple-col"><div id="leftApples" class="apple-tile">🍎🍎</div><div class="pm-row"><button id="leftPlus" type="button" class="pm-btn">+</button><button id="leftMinus" type="button" class="pm-btn">-</button></div><input id="leftNum" type="number" min="0" max="20" value="2" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div><div class="center-col"><select id="opSel"><option value="+">+</option><option value="-">-</option></select></div><div class="apple-col"><div id="rightApples" class="apple-tile">🍎</div><div class="pm-row"><button id="rightPlus" type="button" class="pm-btn">+</button><button id="rightMinus" type="button" class="pm-btn">-</button></div><input id="rightNum" type="number" min="0" max="20" value="1" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div></div><div id="eqText" class="math-eq">2 + 1 = 3</div></section></main>
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
 const imageMap={ironman:'ironman.jpg',spiderman:'spiderman.JPG'};
@@ -471,22 +474,26 @@ const leftMinus=document.getElementById('leftMinus');
 const rightPlus=document.getElementById('rightPlus');
 const rightMinus=document.getElementById('rightMinus');
 const mathTitle=document.getElementById('mathTitle');
+const mathShapeSel=document.getElementById('mathShapeSel');
 const synth=window.speechSynthesis;
 let currentSymbol="🍎";
+let currentMathSymbol="🍎";
 function speakNumber(n){if(!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(String(n));u.lang='zh-HK';u.rate=0.9;u.pitch=1;synth.speak(u);}
-function draw(){const key=sel.value;const s=symbolMap[key]||"⭐";currentSymbol=s;mathTitle.textContent='➕➖ 圖案加減修改器';grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';if(imageMap[key]){d.innerHTML='<img src="'+imageMap[key]+'" style="width:86px;height:86px;object-fit:cover;border-radius:12px;vertical-align:middle"> <span>'+i+'</span>';}else{d.textContent=s+" "+i;}d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}updateEquation();}
-function iconText(n){const c=Math.max(0,Math.min(20,Number(n)||0));if(c===0)return '(無)';if(currentSymbol==='IRONMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.ironman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');if(currentSymbol==='SPIDERMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.spiderman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');return currentSymbol.repeat(c);}
-function updateEquation(){const a=Math.max(0,Math.min(20,Number(leftNum.value||0)));const b=Math.max(0,Math.min(20,Number(rightNum.value||0)));leftNum.value=a;rightNum.value=b;const op=opSel.value;const ans=op==='+'?(a+b):Math.max(0,a-b);eqText.textContent=String(a)+' '+op+' '+String(b)+' = '+String(ans);if(currentSymbol==='IRONMAN_IMG'||currentSymbol==='SPIDERMAN_IMG'){leftApples.innerHTML=iconText(a);rightApples.innerHTML=iconText(b);}else{leftApples.textContent=iconText(a);rightApples.textContent=iconText(b);}}
+function draw(){const key=sel.value;const s=symbolMap[key]||"";currentSymbol=s;mathTitle.textContent='➕➖ 圖案加減修改器';grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';if(key==='none'){d.innerHTML='<span class="n">'+i+'</span>';}else if(imageMap[key]){d.innerHTML='<img src="'+imageMap[key]+'" style="width:86px;height:86px;object-fit:cover;border-radius:12px;vertical-align:middle"> <span class="n">'+i+'</span>';}else{d.innerHTML='<span class="sym">'+s+'</span><span class="n">'+i+'</span>';}d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}updateEquation();}
+function iconText(n){const c=Math.max(0,Math.min(20,Number(n)||0));if(c===0)return '(無)';if(currentMathSymbol==='IRONMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.ironman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');if(currentMathSymbol==='SPIDERMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.spiderman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');return currentMathSymbol.repeat(c);}
+function updateEquation(){const a=Math.max(0,Math.min(20,Number(leftNum.value||0)));const b=Math.max(0,Math.min(20,Number(rightNum.value||0)));leftNum.value=a;rightNum.value=b;const op=opSel.value;const ans=op==='+'?(a+b):Math.max(0,a-b);eqText.textContent=String(a)+' '+op+' '+String(b)+' = '+String(ans);if(currentMathSymbol==='IRONMAN_IMG'||currentMathSymbol==='SPIDERMAN_IMG'){leftApples.innerHTML=iconText(a);rightApples.innerHTML=iconText(b);}else{leftApples.textContent=iconText(a);rightApples.textContent=iconText(b);}}
 fontSlider.addEventListener('input',()=>{document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');});
 document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');
 leftNum.addEventListener('input',updateEquation);
 rightNum.addEventListener('input',updateEquation);
 opSel.addEventListener('change',updateEquation);
+mathShapeSel.addEventListener('change',()=>{const k=mathShapeSel.value;currentMathSymbol=symbolMap[k]||"🍎";updateEquation();});
 leftPlus.addEventListener('click',()=>{leftNum.value=Math.min(20,Number(leftNum.value||0)+1);updateEquation();});
 leftMinus.addEventListener('click',()=>{leftNum.value=Math.max(0,Number(leftNum.value||0)-1);updateEquation();});
 rightPlus.addEventListener('click',()=>{rightNum.value=Math.min(20,Number(rightNum.value||0)+1);updateEquation();});
 rightMinus.addEventListener('click',()=>{rightNum.value=Math.max(0,Number(rightNum.value||0)-1);updateEquation();});
 sel.addEventListener('change',draw);draw();
+currentMathSymbol=symbolMap[mathShapeSel.value]||"🍎";
 updateEquation();
 <\/script></body></html>`;
       const w = window.open("", "_blank");

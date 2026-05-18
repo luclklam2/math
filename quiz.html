@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -444,7 +443,7 @@ select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1re
 </label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="1.5" max="3.2" step="0.05" value="2.35">🔠</label></div><section id="grid" class="num-grid"></section><section class="math-box"><div id="mathTitle" class="math-title">➕➖ 圖案加減修改器</div><div class="math-layout"><div class="apple-col"><div id="leftApples" class="apple-tile">🍎🍎</div><div class="pm-row"><button id="leftPlus" type="button" class="pm-btn">+</button><button id="leftMinus" type="button" class="pm-btn">-</button></div><input id="leftNum" type="number" min="0" max="20" value="2" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div><div class="center-col"><select id="opSel"><option value="+">+</option><option value="-">-</option></select></div><div class="apple-col"><div id="rightApples" class="apple-tile">🍎</div><div class="pm-row"><button id="rightPlus" type="button" class="pm-btn">+</button><button id="rightMinus" type="button" class="pm-btn">-</button></div><input id="rightNum" type="number" min="0" max="20" value="1" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div></div><div id="eqText" class="math-eq">2 + 1 = 3</div></section></main>
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
-const imageMap={ironman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/ironman.jpg',spiderman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/spiderman.JPG'};
+const imageMap={ironman:'ironman.jpg',spiderman:'spiderman.JPG'};
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
 const fontSlider=document.getElementById('cellFontSlider');
@@ -548,9 +547,9 @@ updateEquation();
       {
         title: "C. 簡單加法",
         questions: [
-          { t: `10. ${c10a} + ${c10b} = ?`, a: String(c10), c: shuffle([String(c10 - 1), String(c10), String(c10 + 1)]) },
-          { t: `11. ${c11a} + ${c11b} = ?`, a: String(c11), c: shuffle([String(c11 - 1), String(c11), String(c11 + 1)]) },
-          { t: `12. ${c12a} + ${c12b} = ?`, a: String(c12), c: shuffle([String(c12 - 1), String(c12), String(c12 + 1)]) },
+          { t: `10. 小明有 ${c10a} 粒糖，再加 ${c10b} 粒，一共有幾多粒？`, a: String(c10), c: shuffle([String(c10 - 1), String(c10), String(c10 + 1)]) },
+          { t: `11. 媽媽買咗 ${c11a} 個橙，又買多 ${c11b} 個，一共有幾多個？`, a: String(c11), c: shuffle([String(c11 - 1), String(c11), String(c11 + 1)]) },
+          { t: `12. 盒入面有 ${c12a} 支筆，再放入 ${c12b} 支，而家有幾多支？`, a: String(c12), c: shuffle([String(c12 - 1), String(c12), String(c12 + 1)]) },
           { t: `13. ${c13a} + ${c13b} = ?`, a: String(c13), c: shuffle([String(c13 - 1), String(c13), String(c13 + 1)]) },
           { t: `14. 媽媽有 ${c14a} 個橙，又買多 ${c14b} 個橙，一共幾多個？`, a: String(c14), c: shuffle([String(c14 - 1), String(c14), String(c14 + 1)]) }
         ]
@@ -558,9 +557,9 @@ updateEquation();
       {
         title: "D. 簡單減法",
         questions: [
-          { t: `15. ${d15a} - ${d15b} = ?`, a: String(d15), c: shuffle([String(d15 - 1), String(d15), String(d15 + 1)]) },
-          { t: `16. ${d16a} - ${d16b} = ?`, a: String(d16), c: shuffle([String(d16 - 1), String(d16), String(d16 + 1)]) },
-          { t: `17. ${d17a} - ${d17b} = ?`, a: String(d17), c: shuffle([String(d17 - 1), String(d17), String(d17 + 1)]) },
+          { t: `15. 小明有 ${d15a} 枝鉛筆，借咗 ${d15b} 枝畀同學，仲有幾多枝？`, a: String(d15), c: shuffle([String(d15 - 1), String(d15), String(d15 + 1)]) },
+          { t: `16. 盤上有 ${d16a} 塊餅，食咗 ${d16b} 塊，仲有幾多塊？`, a: String(d16), c: shuffle([String(d16 - 1), String(d16), String(d16 + 1)]) },
+          { t: `17. 有 ${d17a} 粒糖，送咗 ${d17b} 粒畀朋友，剩返幾多粒？`, a: String(d17), c: shuffle([String(d17 - 1), String(d17), String(d17 + 1)]) },
           { t: `18. 枱上有 ${d18a} 粒糖，小明食咗 ${d18b} 粒，仲有幾多粒？`, a: String(d18), c: shuffle([String(d18 - 1), String(d18), String(d18 + 1)]) }
         ]
       },
@@ -591,7 +590,10 @@ updateEquation();
           { t: `30. 以下邊個時鐘係 ${timeLabel(gTimes[4].h, gTimes[4].m)}？`, a: timeLabel(gTimes[4].h, gTimes[4].m), c: timeChoices(gTimes[4].h, gTimes[4].m) }
         ]
       }
-    ];
+    ].map(section => ({
+      ...section,
+      questions: section.questions.slice(0, 3)
+    }));
     };
 
     const quiz = document.getElementById('quiz');

@@ -380,7 +380,7 @@
       <button type="button" id="randomBtn">🎲 隨機新題目</button>
       <div class="size-control">
         <span>🔡</span>
-        <input type="range" id="fontSlider" min="1.3" max="2.4" step="0.05" value="1.65" />
+        <input type="range" id="fontSlider" min="1.3" max="3.0" step="0.05" value="2.05" />
         <span>🔠</span>
       </div>
       <button class="submit" id="checkBtn">✅ 交卷睇分數</button>
@@ -399,7 +399,9 @@
       fish: "🐟",
       flower: "🌸",
       car: "🚗",
-      circle: "⚪"
+      circle: "⚪",
+      ironman: "IRONMAN_IMG",
+      spiderman: "SPIDERMAN_IMG"
     };
     const buildNumberPage = () => {
       const html = `<!DOCTYPE html>
@@ -413,29 +415,66 @@ h1{margin:6px 0 12px;text-align:center}
 .picker{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px}
 select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1rem}
 .font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
-.font-slider input{width:170px;accent-color:#63a2ff}
+.font-slider input{width:190px;accent-color:#63a2ff}
 .num-grid{margin-top:14px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:var(--cell-size,1.3rem);min-height:64px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:var(--cell-size,1.8rem);min-height:110px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
 .num-cell:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 16px rgba(79,121,255,.18)}
 .num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
 .floaty{animation:floaty 1.2s ease-in-out 1}
+.math-box{margin-top:22px;background:#fff9ea;border:3px dashed #ffc8de;border-radius:20px;padding:18px}
+.math-title{font-size:2.1rem;font-weight:900;margin-bottom:18px;text-align:center}
+.math-layout{display:grid;grid-template-columns:1fr auto 1fr;gap:22px;align-items:start;max-width:860px;margin:0 auto}
+.apple-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.apple-tile{background:#fffef4;border-radius:14px;padding:12px 18px;font-size:3.4rem;line-height:1}
+.apple-sign{font-size:3rem;font-weight:900;line-height:1}
+.apple-num{font-size:3rem;font-weight:900;line-height:1}
+.pm-row{display:flex;gap:8px;background:#f2f2f2;border-radius:10px;padding:4px}
+.pm-btn{border:0;background:transparent;font-size:2.2rem;font-weight:900;line-height:1;min-width:52px;min-height:52px;border-radius:8px;cursor:pointer}
+.pm-btn:hover{background:#e7ecff}
+.center-col{display:flex;align-items:flex-start;justify-content:center}
+.center-col select{font-size:2.2rem;font-weight:900;padding:14px 12px;border-radius:16px;border:2px solid #d6e5ff;width:110px;text-align:center;background:#fff}
+.math-eq{margin:22px auto 0;background:#fffef4;border-radius:14px;display:table;padding:12px 22px;font-size:3rem;font-weight:900;text-align:center}
+@media (max-width:700px){.math-layout{grid-template-columns:1fr;gap:14px}.center-col{order:2}.math-eq{font-size:2.2rem}}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 @media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}}
 </style></head>
 <body><main class="wrap"><h1>🔢 1-50 數字圖案頁</h1><div class="top"><label class="picker">圖案：
-<select id="shapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option></select>
-</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="1.1" max="2.3" step="0.05" value="1.35">🔠</label></div><section id="grid" class="num-grid"></section></main>
+<select id="shapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select>
+</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="1.5" max="3.2" step="0.05" value="2.35">🔠</label></div><section id="grid" class="num-grid"></section><section class="math-box"><div id="mathTitle" class="math-title">➕➖ 圖案加減修改器</div><div class="math-layout"><div class="apple-col"><div id="leftApples" class="apple-tile">🍎🍎</div><div class="pm-row"><button id="leftPlus" type="button" class="pm-btn">+</button><button id="leftMinus" type="button" class="pm-btn">-</button></div><input id="leftNum" type="number" min="0" max="20" value="2" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div><div class="center-col"><select id="opSel"><option value="+">+</option><option value="-">-</option></select></div><div class="apple-col"><div id="rightApples" class="apple-tile">🍎</div><div class="pm-row"><button id="rightPlus" type="button" class="pm-btn">+</button><button id="rightMinus" type="button" class="pm-btn">-</button></div><input id="rightNum" type="number" min="0" max="20" value="1" style="font-size:2.2rem;font-weight:900;width:110px;text-align:center;border:0;background:#fffef4;border-radius:12px;padding:8px"></div></div><div id="eqText" class="math-eq">2 + 1 = 3</div></section></main>
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
+const imageMap={ironman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/ironman.jpg',spiderman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/spiderman.JPG'};
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
 const fontSlider=document.getElementById('cellFontSlider');
+const leftNum=document.getElementById('leftNum');
+const rightNum=document.getElementById('rightNum');
+const opSel=document.getElementById('opSel');
+const eqText=document.getElementById('eqText');
+const leftApples=document.getElementById('leftApples');
+const rightApples=document.getElementById('rightApples');
+const leftPlus=document.getElementById('leftPlus');
+const leftMinus=document.getElementById('leftMinus');
+const rightPlus=document.getElementById('rightPlus');
+const rightMinus=document.getElementById('rightMinus');
+const mathTitle=document.getElementById('mathTitle');
 const synth=window.speechSynthesis;
+let currentSymbol="🍎";
 function speakNumber(n){if(!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(String(n));u.lang='zh-HK';u.rate=0.9;u.pitch=1;synth.speak(u);}
-function draw(){const s=symbolMap[sel.value]||"⭐";grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';d.textContent=s+" "+i;d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}}
+function draw(){const key=sel.value;const s=symbolMap[key]||"⭐";currentSymbol=s;mathTitle.textContent='➕➖ 圖案加減修改器';grid.innerHTML="";for(let i=1;i<=50;i++){const d=document.createElement('div');d.className='num-cell';if(imageMap[key]){d.innerHTML='<img src="'+imageMap[key]+'" style="width:86px;height:86px;object-fit:cover;border-radius:12px;vertical-align:middle"> <span>'+i+'</span>';}else{d.textContent=s+" "+i;}d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}updateEquation();}
+function iconText(n){const c=Math.max(0,Math.min(20,Number(n)||0));if(c===0)return '(無)';if(currentSymbol==='IRONMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.ironman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');if(currentSymbol==='SPIDERMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.spiderman+'" style="width:100px;height:100px;object-fit:cover;border-radius:14px">').join('');return currentSymbol.repeat(c);}
+function updateEquation(){const a=Math.max(0,Math.min(20,Number(leftNum.value||0)));const b=Math.max(0,Math.min(20,Number(rightNum.value||0)));leftNum.value=a;rightNum.value=b;const op=opSel.value;const ans=op==='+'?(a+b):Math.max(0,a-b);eqText.textContent=String(a)+' '+op+' '+String(b)+' = '+String(ans);if(currentSymbol==='IRONMAN_IMG'||currentSymbol==='SPIDERMAN_IMG'){leftApples.innerHTML=iconText(a);rightApples.innerHTML=iconText(b);}else{leftApples.textContent=iconText(a);rightApples.textContent=iconText(b);}}
 fontSlider.addEventListener('input',()=>{document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');});
 document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');
+leftNum.addEventListener('input',updateEquation);
+rightNum.addEventListener('input',updateEquation);
+opSel.addEventListener('change',updateEquation);
+leftPlus.addEventListener('click',()=>{leftNum.value=Math.min(20,Number(leftNum.value||0)+1);updateEquation();});
+leftMinus.addEventListener('click',()=>{leftNum.value=Math.max(0,Number(leftNum.value||0)-1);updateEquation();});
+rightPlus.addEventListener('click',()=>{rightNum.value=Math.min(20,Number(rightNum.value||0)+1);updateEquation();});
+rightMinus.addEventListener('click',()=>{rightNum.value=Math.max(0,Number(rightNum.value||0)-1);updateEquation();});
 sel.addEventListener('change',draw);draw();
+updateEquation();
 <\/script></body></html>`;
       const w = window.open("", "_blank");
       if (w) {

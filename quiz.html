@@ -899,12 +899,12 @@ select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1re
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
 const imageMap={
-ironman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/ironman.jpg',
-spiderman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/spiderman.JPG'
+ironman:'ironman.jpg',
+spiderman:'spiderman.JPG'
 };
 const imageMapFallback={
-ironman:'https://raw.githubusercontent.com/lucklam2/math/main/ironman.jpg',
-spiderman:'https://raw.githubusercontent.com/lucklam2/math/main/spiderman.JPG'
+ironman:'https://raw.githubusercontent.com/luclklam2/math/main/ironman.jpg',
+spiderman:'https://raw.githubusercontent.com/luclklam2/math/main/spiderman.JPG'
 };
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
@@ -1453,28 +1453,41 @@ updateEquation();
     let selectedInlineLogicPiece = null;
     let inlineLogicPieceId = 0;
 
-    const inlineLogicSets = {
-      color: [
-        { icon: '🍎', key: 'red' },
-        { icon: '🍓', key: 'red' },
-        { icon: '🟡', key: 'yellow' },
-        { icon: '🌟', key: 'yellow' },
-        { icon: '🔵', key: 'blue' },
-        { icon: '🐟', key: 'blue' }
-      ],
-      shape: [
-        { icon: '🔴', key: 'circle' },
-        { icon: '⚪', key: 'circle' },
-        { icon: '⭐', key: 'star' },
-        { icon: '🌟', key: 'star' },
-        { icon: '🔺', key: 'triangle' },
-        { icon: '△', key: 'triangle' }
-      ],
-      size: [
-        { icon: '🍎', key: 'small', size: 34 },
-        { icon: '🍎', key: 'medium', size: 52 },
-        { icon: '🍎', key: 'large', size: 72 }
-      ]
+    const inlineLogicPools = {
+      color: {
+        red: ['🍎', '🍓', '🔴', '🌹', '🍒'],
+        yellow: ['🟡', '⭐', '🌟', '🍌', '🌕'],
+        blue: ['🔵', '🐟', '💧', '🧢', '🦋']
+      },
+      shape: {
+        circle: ['🔴', '⚪', '🟡', '🔵'],
+        star: ['⭐', '🌟', '✴️', '✳️'],
+        triangle: ['🔺', '△', '🔻', '◁']
+      },
+      sizeIcons: ['🍎', '⭐', '🐟', '🌸', '🚗']
+    };
+
+    const pickMany = (items, count) => shuffle(items).slice(0, count);
+
+    const buildInlineLogicSets = () => {
+      const sizeIcon = inlineLogicPools.sizeIcons[randInt(0, inlineLogicPools.sizeIcons.length - 1)];
+      return {
+        color: [
+          ...pickMany(inlineLogicPools.color.red, 2).map(icon => ({ icon, key: 'red' })),
+          ...pickMany(inlineLogicPools.color.yellow, 2).map(icon => ({ icon, key: 'yellow' })),
+          ...pickMany(inlineLogicPools.color.blue, 2).map(icon => ({ icon, key: 'blue' }))
+        ],
+        shape: [
+          ...pickMany(inlineLogicPools.shape.circle, 2).map(icon => ({ icon, key: 'circle' })),
+          ...pickMany(inlineLogicPools.shape.star, 2).map(icon => ({ icon, key: 'star' })),
+          ...pickMany(inlineLogicPools.shape.triangle, 2).map(icon => ({ icon, key: 'triangle' }))
+        ],
+        size: [
+          { icon: sizeIcon, key: 'small', size: 34 },
+          { icon: sizeIcon, key: 'medium', size: 52 },
+          { icon: sizeIcon, key: 'large', size: 72 }
+        ]
+      };
     };
 
     const makeInlineLogicPiece = (item, group) => {
@@ -1534,6 +1547,7 @@ updateEquation();
       inlineShapeBins.innerHTML = '';
       inlineSizeTray.innerHTML = '';
       inlineSizeSlots.innerHTML = '';
+      const inlineLogicSets = buildInlineLogicSets();
       shuffle(inlineLogicSets.color).forEach(item => inlineColorTray.appendChild(makeInlineLogicPiece(item, 'color')));
       shuffle(inlineLogicSets.shape).forEach(item => inlineShapeTray.appendChild(makeInlineLogicPiece(item, 'shape')));
       shuffle(inlineLogicSets.size).forEach(item => inlineSizeTray.appendChild(makeInlineLogicPiece(item, 'size')));

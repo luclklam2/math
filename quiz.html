@@ -810,7 +810,7 @@
         <button type="button" class="link-btn backHomeBtn">🏠 返回主頁</button>
       </div>
       <div class="logic-tools">
-        <button type="button" class="reset" id="newInlineLogicBtn">🎲 新題目</button>
+        <button type="button" class="reset" id="newInlineLogicBtn">🎲 換題目</button>
         <button type="button" class="submit" id="checkInlineLogicBtn">✅ 檢查</button>
       </div>
       <div class="logic-grid">
@@ -1551,10 +1551,10 @@ updateEquation();
       shuffle(inlineLogicSets.color).forEach(item => inlineColorTray.appendChild(makeInlineLogicPiece(item, 'color')));
       shuffle(inlineLogicSets.shape).forEach(item => inlineShapeTray.appendChild(makeInlineLogicPiece(item, 'shape')));
       shuffle(inlineLogicSets.size).forEach(item => inlineSizeTray.appendChild(makeInlineLogicPiece(item, 'size')));
-      [['紅色', 'red'], ['黃色', 'yellow'], ['藍色', 'blue']].forEach(([label, key]) => inlineColorBins.appendChild(makeInlineLogicBin(label, key, 'color')));
-      [['圓形', 'circle'], ['星形', 'star'], ['三角形', 'triangle']].forEach(([label, key]) => inlineShapeBins.appendChild(makeInlineLogicBin(label, key, 'shape')));
-      [['細', 'small'], ['中', 'medium'], ['大', 'large']].forEach(([label, key]) => inlineSizeSlots.appendChild(makeInlineLogicBin(label, key, 'size')));
-      inlineLogicResult.textContent = '點選圖案，再放入適合的位置。';
+      [['🔴 紅色物件', 'red'], ['🟡 黃色物件', 'yellow'], ['🔵 藍色物件', 'blue']].forEach(([label, key]) => inlineColorBins.appendChild(makeInlineLogicBin(label, key, 'color')));
+      [['⚪ 圓形物件', 'circle'], ['⭐ 星形物件', 'star'], ['🔺 三角形物件', 'triangle']].forEach(([label, key]) => inlineShapeBins.appendChild(makeInlineLogicBin(label, key, 'shape')));
+      [['細細個', 'small'], ['中等大', 'medium'], ['大大個', 'large']].forEach(([label, key]) => inlineSizeSlots.appendChild(makeInlineLogicBin(label, key, 'size')));
+      inlineLogicResult.textContent = '先點上面圖案，再放入下面相同顏色、形狀或大小的位置。';
     };
 
     const checkInlineLogicGroup = selector => {

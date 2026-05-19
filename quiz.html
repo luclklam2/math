@@ -2,149 +2,1686 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>K2 數學練習題</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>K2 數學練習題 - 平板版</title>
   <style>
     :root {
       --bg1: #fff7d6;
       --bg2: #dff7ff;
+      --card: #ffffff;
       --ink: #2d2a32;
-      --line: #dce7ff;
+      --pink: #ff7fab;
+      --mint: #82e9c5;
+      --sky: #88c9ff;
+      --sun: #ffd86b;
+      --ok: #1f9d55;
+      --bad: #d64545;
       --shadow: 0 8px 20px rgba(45, 42, 50, 0.12);
+      --radius: 20px;
+      --question-size: 1.5rem;
+      --choice-size: 1.35rem;
     }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
       color: var(--ink);
-      background: linear-gradient(160deg, var(--bg1), var(--bg2));
+      background:
+        radial-gradient(circle at 10% 10%, #fff3b5 0, transparent 25%),
+        radial-gradient(circle at 90% 20%, #c7f0ff 0, transparent 22%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
       min-height: 100vh;
       padding: 16px;
+      position: relative;
+      overflow-x: hidden;
     }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      z-index: 0;
+      filter: blur(2px);
+      animation: floaty 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: 18px;
+      left: -40px;
+      background: radial-gradient(circle, #ffd1e4 0%, #ffd1e400 70%);
+    }
+
+    body::after {
+      bottom: 10px;
+      right: -45px;
+      background: radial-gradient(circle, #c9f5ff 0%, #c9f5ff00 70%);
+      animation-delay: -2.5s;
+    }
+
     .wrap {
-      max-width: 980px;
+      max-width: 920px;
       margin: 0 auto;
+      background: rgba(255,255,255,0.65);
       border: 3px dashed #ffc6dc;
-      border-radius: 24px;
-      background: #ffffffcc;
-      padding: 16px;
+      border-radius: 28px;
+      padding: 16px 12px 28px;
+      backdrop-filter: blur(2px);
+      position: relative;
+      z-index: 1;
     }
+
+    .wrap::before {
+      content: "🌟 🌈 🧸 🍓";
+      position: absolute;
+      top: -14px;
+      right: 16px;
+      font-size: 1.2rem;
+      letter-spacing: 6px;
+      opacity: 0.95;
+    }
+
     h1 {
+      margin: 8px 0 10px;
       text-align: center;
-      margin: 8px 0;
-      font-size: clamp(1.6rem, 4vw, 2.3rem);
+      font-size: clamp(1.7rem, 3.6vw, 2.4rem);
     }
+
     .subtitle {
       text-align: center;
-      margin: 0 0 14px;
+      margin: 0 0 18px;
       font-weight: 700;
       color: #50586b;
     }
+
     .toolbar {
+      position: sticky;
+      top: 8px;
+      z-index: 10;
       display: flex;
       gap: 10px;
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: 14px;
     }
+
+    .size-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffffcc;
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+    .link-btn { background: linear-gradient(180deg, #f2ecff, #e2d6ff); }
+    .picker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffffcc;
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: var(--shadow);
+      font-weight: 800;
+    }
+    .picker select {
+      border-radius: 10px;
+      border: 2px solid #d6e5ff;
+      padding: 6px 8px;
+      font-size: 1rem;
+    }
+    .num-grid {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .num-cell {
+      background: #fff;
+      border: 2px solid #dde7ff;
+      border-radius: 12px;
+      padding: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .size-control input[type="range"] {
+      width: 170px;
+      accent-color: #63a2ff;
+    }
+
     button {
       border: 0;
       border-radius: 999px;
       padding: 12px 18px;
       font-size: 1rem;
       font-weight: 800;
+      color: #1f2430;
+      background: linear-gradient(180deg, #fff, #ffe9f2);
+      box-shadow: var(--shadow), 0 2px 0 #ffffffaa inset;
+      min-height: 48px;
+      min-width: 120px;
       cursor: pointer;
-      background: linear-gradient(180deg, #f2ecff, #e2d6ff);
+      touch-action: manipulation;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    button:active { transform: translateY(1px) scale(0.99); }
+
+    .submit { background: linear-gradient(180deg, #dcffe8, #abf0ca); }
+    .reset { background: linear-gradient(180deg, #fff5d8, #ffe39a); }
+
+    .score {
+      text-align: center;
+      font-weight: 800;
+      margin-bottom: 14px;
+      font-size: 1.05rem;
+    }
+
+    .section {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin: 14px 0;
+      box-shadow: var(--shadow);
+      border: 2px solid #ffe9f5;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(45, 42, 50, 0.14);
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, #ffe3ef, #eaf8ff);
+    }
+
+    .q {
+      margin: 12px 0;
+      padding: 12px;
+      border-radius: 16px;
+      background: #fffdf6;
+      border: 2px solid #f3ecff;
+      transition: transform 0.18s ease;
+    }
+
+    .q:hover { transform: scale(1.005); }
+
+    .q p {
+      margin: 0 0 10px;
+      font-size: var(--question-size);
+      line-height: 1.45;
+      font-weight: 700;
+    }
+
+    .q-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .speak-btn {
+      min-width: 96px;
+      min-height: 44px;
+      padding: 8px 12px;
+      font-size: 0.95rem;
+      background: linear-gradient(180deg, #eef7ff, #d8ecff);
+      border: 2px solid #bddcff;
+      box-shadow: none;
+      flex-shrink: 0;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+      gap: 8px;
+    }
+
+    .choice {
+      display: block;
+      border: 2px solid #dce4ff;
+      border-radius: 14px;
+      background: #fff;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 800;
+      min-height: 52px;
+      font-size: var(--choice-size);
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .choice.symbol-choice {
+      font-size: calc(var(--choice-size) + 0.3rem);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+    .clock-option {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .mini-clock {
+      width: 102px;
+      height: 102px;
+      border: 2px solid #333;
+      border-radius: 50%;
+      position: relative;
+      background: #fff;
+      flex-shrink: 0;
+    }
+    .mini-clock .num {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 13px;
+      font-weight: 800;
+      color: #222;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .mini-clock .hand {
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: 50% 100%;
+      border-radius: 999px;
+    }
+    .mini-clock .hour {
+      width: 4px;
+      height: 30px;
+      margin-left: -2px;
+      background: #222;
+    }
+    .mini-clock .minute {
+      width: 3px;
+      height: 40px;
+      margin-left: -1.5px;
+      background: #e33;
+    }
+    .mini-clock .dot {
+      width: 12px;
+      height: 12px;
+      background: #222;
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .choice input { display: none; }
+
+    .choice:has(input:checked) {
+      border-color: #63a2ff;
+      background: #eaf3ff;
+      box-shadow: 0 0 0 2px #dbe9ff inset;
+      animation: pop 0.22s ease;
+    }
+
+    .feedback {
+      margin-top: 8px;
+      font-weight: 800;
+      min-height: 24px;
+    }
+
+    #quiz,
+    #gamePage,
+    #comparePage,
+    #logicPage {
+      transform-origin: top center;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+
+    .game-page,
+    .compare-page,
+    .logic-page {
+      background: #fffdf7;
+      border: 2px solid #dfe8ef;
+      border-radius: var(--radius);
+      padding: 14px;
       box-shadow: var(--shadow);
     }
-    .card {
-      background: #fff;
-      border: 2px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      margin-top: 12px;
+
+    .game-page[hidden],
+    .compare-page[hidden],
+    .logic-page[hidden] { display: none; }
+
+    .game-page h2,
+    .compare-page h2,
+    .logic-page h2 {
+      margin: 0 0 10px;
+      font-size: 1.45rem;
     }
-    .card h2 { margin: 0 0 8px; }
-    .note { color: #4d5a73; font-weight: 700; }
+
+    .game-tools,
+    .compare-tools,
+    .logic-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .page-head h2 {
+      margin: 0;
+    }
+
+    .monster-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .monster-card {
+      border: 2px solid #dfe8ef;
+      border-radius: 12px;
+      background: #fff;
+      padding: 14px;
+      text-align: center;
+      min-height: 260px;
+    }
+
+    .monster-face {
+      font-size: 4.2rem;
+      line-height: 1;
+    }
+
+    .monster-card h3 {
+      margin: 8px 0 4px;
+      font-size: 1.7rem;
+    }
+
+    .monster-target {
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #42506a;
+      margin-bottom: 10px;
+    }
+
+    .monster-mouth {
+      min-height: 132px;
+      border: 3px dashed #f5a7bd;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      font-size: 2.5rem;
+    }
+
+    .fruit-pool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 12px 0;
+      padding: 10px;
+      border-radius: 12px;
+      background: #f2f7fb;
+    }
+
+    .fruit-btn {
+      min-width: 66px;
+      min-height: 66px;
+      border-radius: 10px;
+      border: 2px solid #dfe8ef;
+      background: #fff;
+      font-size: 2.35rem;
+      padding: 6px;
+    }
+
+    .fruit-btn.selected {
+      border-color: #63a2ff;
+      background: #eaf3ff;
+      box-shadow: 0 0 0 4px rgba(99, 162, 255, 0.18);
+    }
+
+    .game-result {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border-radius: 12px;
+      background: #f5f8fb;
+      color: #526071;
+      font-weight: 900;
+      text-align: center;
+      padding: 8px;
+      font-size: 1.15rem;
+    }
+
+    .game-question {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #fffdf7;
+      border: 2px solid #dfe8ef;
+    }
+
+    .game-question h3 {
+      margin: 0 0 8px;
+      font-size: 1.45rem;
+      text-align: center;
+    }
+
+    .game-answers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .game-answer.correct {
+      border-color: var(--ok);
+      background: #e7f8ef;
+    }
+
+    .game-answer.wrong {
+      border-color: var(--bad);
+      background: #fff0f2;
+    }
+
+    .compare-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .compare-card {
+      display: grid;
+      grid-template-columns: 1fr 180px 1fr;
+      gap: 12px;
+      align-items: center;
+      border: 2px solid #dfe8ef;
+      border-radius: 12px;
+      background: #fffdf7;
+      padding: 10px;
+    }
+
+    .compare-side {
+      min-height: 106px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border-radius: 12px;
+      border: 2px solid #eef3f7;
+      line-height: 1;
+    }
+
+    .compare-ops {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+    }
+
+    .compare-symbol {
+      min-width: 0;
+      min-height: 62px;
+      font-size: 2rem;
+      background: #fff;
+      border: 2px solid #dfe8ef;
+      border-radius: 10px;
+      padding: 8px;
+    }
+
+    .compare-symbol.active {
+      border-color: #63a2ff;
+      background: #eaf3ff;
+    }
+
+    .compare-card.correct {
+      border-color: var(--ok);
+      background: #e7f8ef;
+    }
+
+    .compare-card.wrong {
+      border-color: var(--bad);
+      background: #fff0f2;
+    }
+
+    .compare-score {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border-radius: 12px;
+      background: #f5f8fb;
+      color: #526071;
+      font-weight: 900;
+      text-align: center;
+      padding: 8px;
+      font-size: 1.15rem;
+    }
+
+    .logic-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .logic-card {
+      border: 2px solid #dfe8ef;
+      border-radius: 12px;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .logic-card h3 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 1.45rem;
+    }
+
+    .logic-wide { grid-column: 1 / -1; }
+
+    .logic-tray {
+      min-height: 86px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 12px;
+      background: #f2f7fb;
+      margin-bottom: 10px;
+    }
+
+    .logic-piece {
+      min-width: 76px;
+      min-height: 76px;
+      border-radius: 10px;
+      border: 2px solid #dfe8ef;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.8rem;
+      line-height: 1;
+      padding: 8px;
+    }
+
+    .logic-piece.selected {
+      border-color: #63a2ff;
+      background: #eaf3ff;
+      box-shadow: 0 0 0 4px rgba(99, 162, 255, 0.18);
+    }
+
+    .logic-piece.used {
+      opacity: 0.28;
+      pointer-events: none;
+    }
+
+    .logic-bins,
+    .size-slots {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .logic-bin,
+    .size-slot {
+      min-height: 132px;
+      border: 3px dashed #cddbea;
+      border-radius: 12px;
+      background: #fffdf7;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+    }
+
+    .logic-bin strong,
+    .size-slot strong {
+      flex: 0 0 100%;
+      text-align: center;
+      color: #44556b;
+      font-size: 1.18rem;
+    }
+
+    .logic-bin.correct,
+    .size-slot.correct {
+      border-color: var(--ok);
+      background: #e7f8ef;
+    }
+
+    .logic-bin.wrong,
+    .size-slot.wrong {
+      border-color: var(--bad);
+      background: #fff0f2;
+    }
+
+    .logic-result {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border-radius: 12px;
+      background: #eefaf6;
+      color: #186d59;
+      font-weight: 900;
+      text-align: center;
+      padding: 8px;
+      font-size: 1.15rem;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .wrap { padding: 12px 8px 20px; }
+      .q p { font-size: var(--question-size); }
+      .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .num-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .monster-grid,
+      .compare-card,
+      .logic-grid,
+      .game-answers { grid-template-columns: 1fr; }
+      .logic-wide { grid-column: auto; }
+      .logic-bins,
+      .size-slots { grid-template-columns: 1fr; }
+    }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.98); }
+      100% { transform: scale(1); }
+    }
   </style>
 </head>
 <body>
   <main class="wrap">
-    <h1>🌈 K2 數學練習題 ✴️</h1>
+    <h1>🌈 K2 數學練習題 🌟</h1>
     <p class="subtitle">適合 4-5 歲小朋友，輕鬆按選擇題學數學</p>
 
     <div class="toolbar">
-      <button type="button" id="openNumPageBtn">🔢 1-100 數字圖案頁</button>
+      <button type="button" class="link-btn" id="openNumPageBtn">🔢 1-100 數字圖案頁</button>
+      <button type="button" class="link-btn" id="openGameBtn">👾 小遊戲</button>
+      <button type="button" class="link-btn" id="openCompareBtn">⚖️ 比大小</button>
+      <button type="button" class="link-btn" id="openLogicBtn">🧩 邏輯與分類</button>
+      <button type="button" id="randomBtn">🎲 隨機新題目</button>
+      <div class="size-control">
+        <span>🔡</span>
+        <input type="range" id="fontSlider" min="1.3" max="3.0" step="0.05" value="2.05" />
+        <span>🔠</span>
+      </div>
+      <button class="submit" id="checkBtn">✅ 交卷睇分數</button>
+      <button class="reset" id="resetBtn">🔄 重新開始</button>
     </div>
 
-    <section class="card">
-      <h2>已修復編碼</h2>
-      <p class="note">主頁已改回正常 UTF-8。按上面按鈕會打開 1-100 頁面，並提供「全部 / 單數 / 雙數」快速鍵。</p>
+    <p class="score" id="score">未交卷</p>
+
+    <form id="quiz"></form>
+
+    <section class="game-page" id="gamePage" hidden>
+      <div class="page-head">
+        <h2>👾 餵小怪獸</h2>
+        <button type="button" class="link-btn backHomeBtn">🏠 返回主頁</button>
+      </div>
+      <div class="game-tools">
+        <button type="button" class="reset" id="newInlineGameBtn">🎲 隨機任務</button>
+        <button type="button" class="link-btn" id="clearInlineGameBtn">↻ 清空</button>
+        <button type="button" id="speakInlineGameBtn">🔊 讀題</button>
+      </div>
+      <div class="monster-grid">
+        <button type="button" class="monster-card" id="inlineMonsterA">
+          <div class="monster-face">👁️👾</div>
+          <h3>大眼怪</h3>
+          <div class="monster-target" id="inlineTargetA">要食 🍎：3 個</div>
+          <div class="monster-mouth" id="inlineMouthA"></div>
+        </button>
+        <button type="button" class="monster-card" id="inlineMonsterB">
+          <div class="monster-face">🧶👾</div>
+          <h3>毛毛怪</h3>
+          <div class="monster-target" id="inlineTargetB">要食 🍌：3 個</div>
+          <div class="monster-mouth" id="inlineMouthB"></div>
+        </button>
+      </div>
+      <div class="fruit-pool" id="inlineFruitPool"></div>
+      <div class="game-result" id="inlineGameResult">先揀水果，再餵怪獸。</div>
+      <div class="game-question">
+        <h3>邊一隻食多啲？</h3>
+        <div class="game-answers">
+          <button type="button" class="game-answer" data-answer="a">大眼怪</button>
+          <button type="button" class="game-answer" data-answer="b">毛毛怪</button>
+          <button type="button" class="game-answer" data-answer="same">一樣多</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="compare-page" id="comparePage" hidden>
+      <div class="page-head">
+        <h2>⚖️ 比較大小 10 題</h2>
+        <button type="button" class="link-btn backHomeBtn">🏠 返回主頁</button>
+      </div>
+      <div class="compare-tools">
+        <button type="button" class="submit" id="checkInlineCompareBtn">✅ 交卷</button>
+        <button type="button" class="reset" id="newInlineCompareBtn">🎲 重新出題</button>
+      </div>
+      <div class="compare-list" id="inlineCompareList"></div>
+      <div class="compare-score" id="inlineCompareScore">完成 10 題後按交卷。</div>
+    </section>
+
+    <section class="logic-page" id="logicPage" hidden>
+      <div class="page-head">
+        <h2>🧩 邏輯與分類</h2>
+        <button type="button" class="link-btn backHomeBtn">🏠 返回主頁</button>
+      </div>
+      <div class="logic-tools">
+        <button type="button" class="reset" id="newInlineLogicBtn">🎲 新題目</button>
+        <button type="button" class="submit" id="checkInlineLogicBtn">✅ 檢查</button>
+      </div>
+      <div class="logic-grid">
+        <section class="logic-card">
+          <h3>按顏色分類</h3>
+          <div class="logic-tray" id="inlineColorTray"></div>
+          <div class="logic-bins" id="inlineColorBins"></div>
+        </section>
+        <section class="logic-card">
+          <h3>按形狀分類</h3>
+          <div class="logic-tray" id="inlineShapeTray"></div>
+          <div class="logic-bins" id="inlineShapeBins"></div>
+        </section>
+        <section class="logic-card logic-wide">
+          <h3>由細排到大</h3>
+          <div class="logic-tray" id="inlineSizeTray"></div>
+          <div class="size-slots" id="inlineSizeSlots"></div>
+        </section>
+      </div>
+      <div class="logic-result" id="inlineLogicResult">點選圖案，再放入適合的位置。</div>
     </section>
   </main>
 
   <script>
     const symbolMap = {
-      none: "",
+      number: "",
       apple: "🍎",
       star: "⭐",
       fish: "🐟",
       flower: "🌸",
       car: "🚗",
-      circle: "⚪"
+      circle: "⚪",
+      ironman: "IRONMAN_IMG",
+      spiderman: "SPIDERMAN_IMG"
     };
-
     const buildNumberPage = () => {
       const html = `<!DOCTYPE html>
 <html lang="zh-HK"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🔢 1-100 數字圖案頁</title>
+<title>1-100 數字圖案頁</title>
 <style>
-:root{--cell-size:2.9rem}
-*{box-sizing:border-box}
 body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;background:linear-gradient(150deg,#fff7d6,#dff7ff);padding:16px;color:#2d2a32}
 .wrap{max-width:980px;margin:0 auto;background:#ffffffcc;border:3px dashed #ffc6dc;border-radius:24px;padding:14px}
 h1{margin:6px 0 12px;text-align:center}
-.top,.quick-filter{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:center;margin-bottom:10px}
-.picker,.font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
+.num-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.num-page-head h1{margin:6px 0;text-align:left}
+.home-btn{border:0;border-radius:999px;padding:12px 18px;font-size:1.05rem;font-weight:900;background:linear-gradient(180deg,#fff,#eaf3ff);box-shadow:0 8px 16px rgba(45,42,50,.12);cursor:pointer}
+.top{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.picker{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px}
 select{border-radius:10px;border:2px solid #d6e5ff;padding:6px 8px;font-size:1rem}
+.font-slider{display:inline-flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:8px 12px;font-weight:800}
 .font-slider input{width:190px;accent-color:#63a2ff}
-.filter-btn{border:0;border-radius:999px;padding:8px 14px;font-size:1rem;font-weight:800;background:linear-gradient(180deg,#eef7ff,#d8ecff);cursor:pointer}
-.filter-btn.active{background:linear-gradient(180deg,#dcffe8,#abf0ca)}
+.parity-btn{border:1px solid #8fbaff;border-radius:8px;padding:12px 18px;font-size:1.35rem;font-weight:900;min-height:56px;cursor:pointer;background:#eaf3ff;color:#0c2842}
+.parity-btn.odd{background:#fff3bd;border-color:#ffbd30}
+.parity-btn.active{box-shadow:0 0 0 3px rgba(99,162,255,.25) inset;transform:translateY(-1px)}
 .num-grid{margin-top:14px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:12px;font-weight:800;font-size:var(--cell-size);min-height:148px;display:flex;align-items:center;justify-content:center;gap:14px}
-.num-cell .n{font-size:1.25em;font-weight:900}
-.num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset}
-@media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.num-cell{min-height:120px}}
+.num-cell{background:#fff;border:2px solid #dde7ff;border-radius:12px;padding:10px;font-weight:800;font-size:var(--cell-size,3.55rem);min-height:136px;display:flex;align-items:center;justify-content:center;gap:10px;transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
+.num-cell:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 8px 16px rgba(79,121,255,.18)}
+.num-cell.active{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
+.num-cell.odd-highlight{background:linear-gradient(180deg,#fffef0,#fff6bd);box-shadow:0 0 0 2px #ffe27a inset,0 0 18px rgba(255,223,91,.9),0 0 30px rgba(255,223,91,.5)}
+.num-cell.even-highlight{background:linear-gradient(180deg,#effff2,#caffd7);box-shadow:0 0 0 2px #6fe58c inset,0 0 18px rgba(89,220,122,.75),0 0 30px rgba(89,220,122,.4)}
+.floaty{animation:floaty 1.2s ease-in-out 1}
+.math-box{margin-top:28px;background:#fffdf7;border:0;border-radius:8px;padding:22px}
+.math-title{font-size:2.4rem;font-weight:900;margin-bottom:18px;text-align:left}
+.math-tools{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.math-tools .picker{box-shadow:none;border:1px solid #e2ebff;border-radius:10px;padding:14px 18px;font-size:1.8rem}
+.math-tools select{font-size:2.3rem;font-weight:900;min-width:260px}
+.math-layout{display:grid;grid-template-columns:1fr 136px 1fr;gap:16px;align-items:start;margin:0 auto}
+.apple-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;min-height:316px;background:#fff;border:1px solid #e4ecfa;border-radius:10px;padding:30px}
+.apple-tile{background:transparent;border-radius:8px;padding:0;font-size:4.8rem;line-height:1;min-height:96px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.apple-sign{font-size:3rem;font-weight:900;line-height:1}
+.apple-num{font-size:3rem;font-weight:900;line-height:1}
+.pm-row{display:grid;grid-template-columns:90px 1fr 90px;gap:12px;width:min(352px,100%)}
+.pm-btn{border:1px solid #8fbdff;background:#eaf4ff;font-size:3.05rem;font-weight:900;line-height:1;min-width:90px;min-height:74px;border-radius:8px;cursor:pointer;color:#0e263f}
+.pm-btn:hover{background:#dcecff}
+.math-num{font-size:2.15rem;font-weight:900;width:100%;text-align:center;border:1px solid #dce6f5;background:#fff;border-radius:8px;padding:12px;min-height:74px}
+.center-col{display:flex;align-items:flex-start;justify-content:center}
+.center-col select{font-size:3.2rem;font-weight:900;padding:24px 12px;border-radius:8px;border:1px solid #d6e5ff;width:136px;text-align:center;background:#fff}
+.math-eq{margin:16px 0 0;background:#e9fbf7;border-radius:8px;padding:20px 30px;font-size:3.9rem;font-weight:900;text-align:center;color:#087568}
+@media (max-width:700px){.math-layout{grid-template-columns:1fr;gap:14px}.center-col{order:2}.math-eq{font-size:3rem}.apple-col{min-height:260px}.math-tools{justify-content:flex-start;flex-wrap:wrap}.math-tools select{min-width:210px}.pm-row{grid-template-columns:70px 1fr 70px}.pm-btn{min-width:70px;min-height:62px;font-size:2.4rem}.math-num{min-height:62px;font-size:1.75rem}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@media (max-width:700px){.num-grid{grid-template-columns:repeat(3,minmax(0,1fr));}.num-cell{min-height:118px}.parity-btn{font-size:1.15rem;padding:10px 14px}}
 </style></head>
-<body><main class="wrap"><h1>🔢 1-100 數字圖案頁</h1>
-<div class="top"><label class="picker">圖案：
-<select id="shapeSel"><option value="none">🔢 只顯示數字</option><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option></select></label>
-<label class="font-slider">字體<input type="range" id="cellFontSlider" min="2.0" max="4.6" step="0.05" value="2.9"></label></div>
-<div class="quick-filter"><button type="button" class="filter-btn active" data-filter="all">全部</button><button type="button" class="filter-btn" data-filter="odd">單數</button><button type="button" class="filter-btn" data-filter="even">雙數</button></div>
-<section id="grid" class="num-grid"></section></main>
+<body><main class="wrap"><div class="num-page-head"><h1>🔢 1-100 數字圖案頁</h1><button type="button" class="home-btn" onclick="window.close()">🏠 返回主頁</button></div><div class="top"><label class="picker">圖案：
+<select id="shapeSel"><option value="number">🔢 純數字</option><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman">🦾 IRON MAN</option><option value="spiderman">🕷️ SPIDER MAN</option></select>
+</label><label class="font-slider">🔡<input type="range" id="cellFontSlider" min="1.8" max="5.0" step="0.05" value="3.55">🔠</label><button id="oddBtn" type="button" class="parity-btn odd">1 3 5 單數</button><button id="evenBtn" type="button" class="parity-btn">2 4 6 雙數</button></div><section id="grid" class="num-grid"></section><section class="math-box"><div id="mathTitle" class="math-title">➕➖ 圖案加減修改器</div><div class="math-tools"><label class="picker">圖案 <select id="mathShapeSel"><option value="apple">🍎 蘋果</option><option value="star">⭐ 星星</option><option value="fish">🐟 小魚</option><option value="flower">🌸 花花</option><option value="car">🚗 車仔</option><option value="circle">⚪ 圓點</option><option value="ironman" selected>🦾 IRONMAN</option><option value="spiderman">🕷️ SPIDERMAN</option></select></label></div><div class="math-layout"><div class="apple-col"><div id="leftApples" class="apple-tile">🍎🍎</div><div class="pm-row"><button id="leftMinus" type="button" class="pm-btn">−</button><input id="leftNum" class="math-num" type="number" min="0" max="20" value="2"><button id="leftPlus" type="button" class="pm-btn">+</button></div></div><div class="center-col"><select id="opSel"><option value="+">+</option><option value="-">−</option></select></div><div class="apple-col"><div id="rightApples" class="apple-tile">🍎</div><div class="pm-row"><button id="rightMinus" type="button" class="pm-btn">−</button><input id="rightNum" class="math-num" type="number" min="0" max="20" value="1"><button id="rightPlus" type="button" class="pm-btn">+</button></div></div></div><div id="eqText" class="math-eq">2 + 1 = 3</div></section></main>
 <script>
 const symbolMap=${JSON.stringify(symbolMap)};
+const imageMap={
+ironman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/ironman.jpg',
+spiderman:'file:///C:/Users/kelvin.lin/Documents/Preview/math/spiderman.JPG'
+};
+const imageMapFallback={
+ironman:'https://raw.githubusercontent.com/lucklam2/math/main/ironman.jpg',
+spiderman:'https://raw.githubusercontent.com/lucklam2/math/main/spiderman.JPG'
+};
 const grid=document.getElementById('grid');
 const sel=document.getElementById('shapeSel');
+const mathSel=document.getElementById('mathShapeSel');
+const oddBtn=document.getElementById('oddBtn');
+const evenBtn=document.getElementById('evenBtn');
 const fontSlider=document.getElementById('cellFontSlider');
-const filterButtons=document.querySelectorAll('.filter-btn');
-let currentFilter='all';
-function draw(){const s=symbolMap[sel.value]||'';grid.innerHTML='';for(let i=1;i<=100;i++){if(currentFilter==='odd'&&i%2===0)continue;if(currentFilter==='even'&&i%2===1)continue;const d=document.createElement('div');d.className='num-cell';d.innerHTML=s?'<span>'+s+'</span><span class="n">'+i+'</span>':'<span class="n">'+i+'</span>';d.addEventListener('click',()=>d.classList.toggle('active'));grid.appendChild(d);}}
-fontSlider.addEventListener('input',()=>document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem'));
-filterButtons.forEach(btn=>btn.addEventListener('click',()=>{currentFilter=btn.dataset.filter;filterButtons.forEach(b=>b.classList.toggle('active',b===btn));draw();}));
-sel.addEventListener('change',draw);
+const leftNum=document.getElementById('leftNum');
+const rightNum=document.getElementById('rightNum');
+const opSel=document.getElementById('opSel');
+const eqText=document.getElementById('eqText');
+const leftApples=document.getElementById('leftApples');
+const rightApples=document.getElementById('rightApples');
+const leftPlus=document.getElementById('leftPlus');
+const leftMinus=document.getElementById('leftMinus');
+const rightPlus=document.getElementById('rightPlus');
+const rightMinus=document.getElementById('rightMinus');
+const mathTitle=document.getElementById('mathTitle');
+const synth=window.speechSynthesis;
+let currentSymbol="IRONMAN_IMG";
+function speakNumber(n){if(!synth)return;synth.cancel();const u=new SpeechSynthesisUtterance(String(n));u.lang='zh-HK';u.rate=0.9;u.pitch=1;synth.speak(u);}
+function draw(){const key=sel.value;const s=symbolMap[key]||"⭐";mathTitle.textContent='➕➖ 圖案加減修改器';grid.innerHTML="";for(let i=1;i<=100;i++){const d=document.createElement('div');d.className='num-cell';if(key==="number"){d.textContent=String(i);}else if(imageMap[key]){const src=imageMap[key];const fb=imageMapFallback[key]||src;d.innerHTML='<img src="'+src+'" data-fallback="'+fb+'" style="width:86px;height:86px;object-fit:cover;border-radius:12px;vertical-align:middle"> <span>'+i+'</span>';}else{d.textContent=s+" "+i;}d.addEventListener('click',()=>{d.classList.toggle('active');d.classList.remove('floaty');void d.offsetWidth;d.classList.add('floaty');speakNumber(i);});grid.appendChild(d);}grid.querySelectorAll('img[data-fallback]').forEach(img=>{img.addEventListener('error',()=>{if(img.src!==img.dataset.fallback)img.src=img.dataset.fallback;},{once:true});});updateEquation();}
+function highlightNumbers(mode){const isOdd=mode==='odd';oddBtn.classList.toggle('active',isOdd);evenBtn.classList.toggle('active',!isOdd);grid.querySelectorAll('.num-cell').forEach((cell,idx)=>{const match=isOdd?((idx+1)%2===1):((idx+1)%2===0);cell.classList.remove('active','odd-highlight','even-highlight');if(match)cell.classList.add(isOdd?'odd-highlight':'even-highlight');});}
+function setMathSymbol(){const key=mathSel.value;currentSymbol=imageMap[key]?(key==='ironman'?'IRONMAN_IMG':'SPIDERMAN_IMG'):(symbolMap[key]||"🍎");}
+function iconText(n){const c=Math.max(0,Math.min(20,Number(n)||0));if(c===0)return '(無)';if(currentSymbol==='IRONMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.ironman+'" data-fallback="'+imageMapFallback.ironman+'" style="width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #dce6f5">').join('');if(currentSymbol==='SPIDERMAN_IMG')return Array.from({length:c},()=>'<img src="'+imageMap.spiderman+'" data-fallback="'+imageMapFallback.spiderman+'" style="width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid #dce6f5">').join('');return currentSymbol.repeat(c);}
+function updateEquation(){const a=Math.max(0,Math.min(20,Number(leftNum.value||0)));const b=Math.max(0,Math.min(20,Number(rightNum.value||0)));leftNum.value=a;rightNum.value=b;const op=opSel.value;const ans=op==='+'?(a+b):Math.max(0,a-b);eqText.textContent=String(a)+' '+op+' '+String(b)+' = '+String(ans);if(currentSymbol==='IRONMAN_IMG'||currentSymbol==='SPIDERMAN_IMG'){leftApples.innerHTML=iconText(a);rightApples.innerHTML=iconText(b);document.querySelectorAll('#leftApples img[data-fallback],#rightApples img[data-fallback]').forEach(img=>{img.addEventListener('error',()=>{if(img.src!==img.dataset.fallback)img.src=img.dataset.fallback;},{once:true});});}else{leftApples.textContent=iconText(a);rightApples.textContent=iconText(b);}}
+fontSlider.addEventListener('input',()=>{document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');});
 document.documentElement.style.setProperty('--cell-size',fontSlider.value+'rem');
-draw();
+oddBtn.addEventListener('click',()=>highlightNumbers('odd'));
+evenBtn.addEventListener('click',()=>highlightNumbers('even'));
+leftNum.addEventListener('input',updateEquation);
+rightNum.addEventListener('input',updateEquation);
+opSel.addEventListener('change',updateEquation);
+leftPlus.addEventListener('click',()=>{leftNum.value=Math.min(20,Number(leftNum.value||0)+1);updateEquation();});
+leftMinus.addEventListener('click',()=>{leftNum.value=Math.max(0,Number(leftNum.value||0)-1);updateEquation();});
+rightPlus.addEventListener('click',()=>{rightNum.value=Math.min(20,Number(rightNum.value||0)+1);updateEquation();});
+rightMinus.addEventListener('click',()=>{rightNum.value=Math.max(0,Number(rightNum.value||0)-1);updateEquation();});
+sel.addEventListener('change',draw);draw();
+mathSel.addEventListener('change',()=>{setMathSymbol();updateEquation();});
+setMathSymbol();
+updateEquation();
 <\/script></body></html>`;
+      const w = window.open("", "_blank");
+      if (w) {
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+      }
+    };
+    const iconRepeat = (icon, n) => Array.from({ length: n }, () => icon).join('');
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
-      const w = window.open('', '_blank');
-      if (!w) return;
-      w.document.open();
-      w.document.write(html);
-      w.document.close();
+    const buildSections = () => {
+      const a1 = randInt(2, 7);
+      const a2 = randInt(3, 8);
+      const a3 = randInt(2, 6);
+      const a4 = randInt(1, 5);
+      const a5 = randInt(4, 8);
+      const b6L = randInt(2, 6), b6R = randInt(1, b6L - 1);
+      const b7L = randInt(1, 4), b7R = randInt(b7L + 1, 6);
+      const c10a = randInt(1, 4), c10b = randInt(1, 4), c10 = c10a + c10b;
+      const c11a = randInt(2, 5), c11b = randInt(1, 4), c11 = c11a + c11b;
+      const c12a = randInt(2, 5), c12b = randInt(1, 3), c12 = c12a + c12b;
+      const c13a = randInt(3, 6), c13b = randInt(1, 3), c13 = c13a + c13b;
+      const c14a = randInt(2, 5), c14b = randInt(1, 4), c14 = c14a + c14b;
+      const d15a = randInt(4, 8), d15b = randInt(1, 3), d15 = d15a - d15b;
+      const d16a = randInt(4, 8), d16b = randInt(1, Math.min(4, d16a - 1)), d16 = d16a - d16b;
+      const d17a = randInt(5, 9), d17b = randInt(1, Math.min(4, d17a - 1)), d17 = d17a - d17b;
+      const d18a = randInt(4, 8), d18b = randInt(1, Math.min(3, d18a - 1)), d18 = d18a - d18b;
+      const f24 = randInt(4, 8);
+      const f25step = randInt(2, 3), f25base = randInt(1, 3), f25 = f25base + f25step * 3;
+      const gTimes = [
+        { h: randInt(1, 11), m: 0 },
+        { h: randInt(1, 11), m: 30 },
+        { h: randInt(1, 11), m: 15 },
+        { h: randInt(1, 11), m: 45 },
+        { h: randInt(1, 11), m: [0, 10, 20, 30, 40, 50][randInt(0, 5)] }
+      ];
+      const timeLabel = (h, m) => `${h}時${m}分`;
+      const timeChoices = (h, m) => {
+        const wrong1 = { h: ((h % 12) + 1), m };
+        const wrong2 = { h, m: (m + 30) % 60 };
+        return shuffle([{ h, m }, wrong1, wrong2]).map(t => ({
+          value: timeLabel(t.h, t.m),
+          clock: { h: t.h, m: t.m },
+          text: timeLabel(t.h, t.m)
+        }));
+      };
+
+      return [
+      {
+        title: "A. 數一數，寫數字",
+        questions: [
+          { t: `1. ${iconRepeat("🍎", a1)} 有幾多個蘋果？`, a: String(a1), c: shuffle([String(a1 - 1), String(a1), String(a1 + 1)]) },
+          { t: `2. ${iconRepeat("⭐", a2)} 有幾多粒星星？`, a: String(a2), c: shuffle([String(a2 - 1), String(a2), String(a2 + 1)]) },
+          { t: `3. ${iconRepeat("🐟", a3)} 有幾多條魚？`, a: String(a3), c: shuffle([String(a3 - 1), String(a3), String(a3 + 1)]) },
+          { t: `4. ${iconRepeat("⚽", a4)} 有幾多個波？`, a: String(a4), c: shuffle([String(Math.max(0, a4 - 1)), String(a4), String(a4 + 1)]) },
+          { t: `5. ${iconRepeat("🌸", a5)} 有幾多朵花？`, a: String(a5), c: shuffle([String(a5 - 1), String(a5), String(a5 + 1)]) }
+        ]
+      },
+      {
+        title: "B. 比較多與少",
+        questions: [
+          { t: `6. ${iconRepeat("🐤", b6L)} vs ${iconRepeat("🐤", b6R)}，邊一邊比較多？`, a: "左邊", c: ["左邊", "右邊"] },
+          { t: `7. ${iconRepeat("🐰", b7L)} vs ${iconRepeat("🐰", b7R)}，邊一邊比較少？`, a: "左邊", c: ["左邊", "右邊"] },
+          { t: "8. 🍓🍓🍓 比 🍓🍓 ______。", a: "多", c: ["多", "少"] },
+          { t: "9. 🚗🚗 比 🚗🚗🚗 ______。", a: "少", c: ["多", "少"] }
+        ]
+      },
+      {
+        title: "C. 簡單加法",
+        questions: [
+          { t: `10. 小明有 ${c10a} 粒糖，再加 ${c10b} 粒，一共有幾多粒？`, a: String(c10), c: shuffle([String(c10 - 1), String(c10), String(c10 + 1)]) },
+          { t: `11. 媽媽買咗 ${c11a} 個橙，又買多 ${c11b} 個，一共有幾多個？`, a: String(c11), c: shuffle([String(c11 - 1), String(c11), String(c11 + 1)]) },
+          { t: `12. 盒入面有 ${c12a} 支筆，再放入 ${c12b} 支，而家有幾多支？`, a: String(c12), c: shuffle([String(c12 - 1), String(c12), String(c12 + 1)]) },
+          { t: `13. ${c13a} + ${c13b} = ?`, a: String(c13), c: shuffle([String(c13 - 1), String(c13), String(c13 + 1)]) },
+          { t: `14. 媽媽有 ${c14a} 個橙，又買多 ${c14b} 個橙，一共幾多個？`, a: String(c14), c: shuffle([String(c14 - 1), String(c14), String(c14 + 1)]) }
+        ]
+      },
+      {
+        title: "D. 生活應用減法",
+        questions: [
+          { t: `15. 媽媽買咗 ${d15a} 個蘋果，妹妹食咗 ${d15b} 個，仲有幾多個蘋果？`, a: String(d15), c: shuffle([String(d15 - 1), String(d15), String(d15 + 1)]) },
+          { t: `16. 小明有 ${d16a} 張貼紙，送咗 ${d16b} 張畀朋友，仲有幾多張貼紙？`, a: String(d16), c: shuffle([String(d16 - 1), String(d16), String(d16 + 1)]) },
+          { t: `17. 盒入面有 ${d17a} 架玩具車，攞走咗 ${d17b} 架，盒入面仲有幾多架？`, a: String(d17), c: shuffle([String(d17 - 1), String(d17), String(d17 + 1)]) },
+          { t: `18. 枱上有 ${d18a} 粒糖，小朋友食咗 ${d18b} 粒，仲有幾多粒糖？`, a: String(d18), c: shuffle([String(d18 - 1), String(d18), String(d18 + 1)]) }
+        ]
+      },
+      {
+        title: "E. 圖形認識",
+        questions: [
+          { t: "19. 邊個係圓形？", a: "○", c: ["○", "□", "△"] },
+          { t: "20. 邊個係三角形？", a: "△", c: ["□", "△", "○"] },
+          { t: "21. 邊個係正方形？", a: "□", c: ["○", "□", "△"] }
+        ]
+      },
+      {
+        title: "F. 規律題",
+        questions: [
+          { t: "22. ○ △ ○ △ ○ ____ 下一個係？", a: "△", c: ["○", "△", "□"] },
+          { t: "23. □ □ ○ □ □ ○ ____ 下一個係？", a: "□", c: ["○", "□", "△"] },
+          { t: `24. ${f24 - 4}, ${f24 - 3}, ${f24 - 2}, ${f24 - 1}, ____`, a: String(f24), c: shuffle([String(f24), String(f24 + 1), String(f24 + 2)]) },
+          { t: `25. ${f25base}, ${f25base + f25step}, ${f25base + f25step * 2}, ____`, a: String(f25), c: shuffle([String(f25 - 1), String(f25), String(f25 + 1)]) }
+        ]
+      },
+      {
+        title: "G. 時鐘問題",
+        questions: [
+          { t: `26. 以下邊個時鐘係 ${timeLabel(gTimes[0].h, gTimes[0].m)}？`, a: timeLabel(gTimes[0].h, gTimes[0].m), c: timeChoices(gTimes[0].h, gTimes[0].m) },
+          { t: `27. 以下邊個時鐘係 ${timeLabel(gTimes[1].h, gTimes[1].m)}？`, a: timeLabel(gTimes[1].h, gTimes[1].m), c: timeChoices(gTimes[1].h, gTimes[1].m) },
+          { t: `28. 以下邊個時鐘係 ${timeLabel(gTimes[2].h, gTimes[2].m)}？`, a: timeLabel(gTimes[2].h, gTimes[2].m), c: timeChoices(gTimes[2].h, gTimes[2].m) },
+          { t: `29. 以下邊個時鐘係 ${timeLabel(gTimes[3].h, gTimes[3].m)}？`, a: timeLabel(gTimes[3].h, gTimes[3].m), c: timeChoices(gTimes[3].h, gTimes[3].m) },
+          { t: `30. 以下邊個時鐘係 ${timeLabel(gTimes[4].h, gTimes[4].m)}？`, a: timeLabel(gTimes[4].h, gTimes[4].m), c: timeChoices(gTimes[4].h, gTimes[4].m) }
+        ]
+      }
+    ].map(section => ({
+      ...section,
+      questions: section.questions.slice(0, 3)
+    }));
     };
 
+    const quiz = document.getElementById('quiz');
+    const renderQuiz = () => {
+      quiz.innerHTML = '';
+      const sections = buildSections();
+      let idx = 0;
+      for (const section of sections) {
+      const box = document.createElement('section');
+      box.className = 'section';
+      const h2 = document.createElement('h2');
+      h2.textContent = section.title;
+      box.appendChild(h2);
+
+      for (const q of section.questions) {
+        idx++;
+        const qWrap = document.createElement('div');
+        qWrap.className = 'q';
+        qWrap.dataset.answer = q.a;
+
+        const head = document.createElement('div');
+        head.className = 'q-head';
+
+        const p = document.createElement('p');
+        p.textContent = q.t;
+
+        const speakBtn = document.createElement('button');
+        speakBtn.type = 'button';
+        speakBtn.className = 'speak-btn';
+        speakBtn.textContent = '🔊 讀題';
+        speakBtn.dataset.text = q.t;
+
+        head.appendChild(p);
+        head.appendChild(speakBtn);
+        qWrap.appendChild(head);
+
+        const choices = document.createElement('div');
+        choices.className = 'choices';
+
+        q.c.forEach((item, i) => {
+          const label = document.createElement('label');
+          label.className = 'choice';
+          const rawText = typeof item === 'string' ? item : item.value;
+          if (/^[○△□]$/.test(rawText.trim())) label.classList.add('symbol-choice');
+
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = `q${idx}`;
+          input.value = rawText;
+          if (i === 0) input.required = true;
+
+          label.appendChild(input);
+          if (typeof item === 'object' && item.clock) {
+            const wrap = document.createElement('div');
+            wrap.className = 'clock-option';
+            const clock = document.createElement('div');
+            clock.className = 'mini-clock';
+            const hour = document.createElement('span');
+            hour.className = 'hand hour';
+            const minute = document.createElement('span');
+            minute.className = 'hand minute';
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            for (let n = 1; n <= 12; n++) {
+              const num = document.createElement('span');
+              num.className = 'num';
+              num.textContent = String(n);
+              const deg = n * 30;
+              const r = 42;
+              const x = Math.sin((deg * Math.PI) / 180) * r;
+              const y = -Math.cos((deg * Math.PI) / 180) * r;
+              num.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+              clock.appendChild(num);
+            }
+            const minDeg = item.clock.m * 6;
+            const hourDeg = ((item.clock.h % 12) * 30) + (item.clock.m * 0.5);
+            hour.style.transform = `rotate(${hourDeg}deg)`;
+            minute.style.transform = `rotate(${minDeg}deg)`;
+            clock.appendChild(hour);
+            clock.appendChild(minute);
+            clock.appendChild(dot);
+            wrap.appendChild(clock);
+            label.appendChild(wrap);
+          } else {
+            label.appendChild(document.createTextNode(rawText));
+          }
+          choices.appendChild(label);
+        });
+
+        qWrap.appendChild(choices);
+
+        const fb = document.createElement('div');
+        fb.className = 'feedback';
+        qWrap.appendChild(fb);
+
+        box.appendChild(qWrap);
+      }
+
+        quiz.appendChild(box);
+      }
+    };
+    renderQuiz();
+
+    const score = document.getElementById('score');
+    const synth = window.speechSynthesis;
+    let voiceCache = [];
+    const loadVoices = () => {
+      voiceCache = synth ? synth.getVoices() : [];
+    };
+    loadVoices();
+    if (synth) synth.addEventListener('voiceschanged', loadVoices);
+
+    const getNaturalVoice = () => {
+      if (!voiceCache.length) return null;
+      return (
+        voiceCache.find(v => v.lang === 'zh-HK') ||
+        voiceCache.find(v => v.lang.startsWith('zh-HK')) ||
+        voiceCache.find(v => v.lang === 'yue-HK') ||
+        voiceCache.find(v => v.lang.startsWith('yue')) ||
+        voiceCache.find(v => v.lang.startsWith('zh')) ||
+        voiceCache[0]
+      );
+    };
+
+    const speakText = text => {
+      if (!synth) return;
+      synth.cancel();
+      const u = new SpeechSynthesisUtterance(text.replace(/[🍎⭐🐟⚽🌸🐤🐰🍓🚗]/g, ' '));
+      const voice = getNaturalVoice();
+      if (voice) u.voice = voice;
+      u.lang = voice?.lang || 'zh-HK';
+      u.rate = 0.92;
+      u.pitch = 1.0;
+      u.volume = 1;
+      synth.speak(u);
+    };
+
+    const gamePage = document.getElementById('gamePage');
+    const comparePage = document.getElementById('comparePage');
+    const logicPage = document.getElementById('logicPage');
+    const rootStyle = document.documentElement.style;
+    const fontSlider = document.getElementById('fontSlider');
+    const pageScales = {
+      quiz: Number(fontSlider.value),
+      game: 2.05,
+      compare: 2.05,
+      logic: 2.05
+    };
+    let currentPage = 'quiz';
+    const inlineFruitPool = document.getElementById('inlineFruitPool');
+    const inlineMouthA = document.getElementById('inlineMouthA');
+    const inlineMouthB = document.getElementById('inlineMouthB');
+    const inlineGameResult = document.getElementById('inlineGameResult');
+    const inlineTargetA = document.getElementById('inlineTargetA');
+    const inlineTargetB = document.getElementById('inlineTargetB');
+    const inlineGameAnswers = [...document.querySelectorAll('.game-answer')];
+    const inlineFoods = ['🍎', '🍌', '🍓', '🍇', '🍊', '🍉'];
+    let inlineFoodA = '🍎';
+    let inlineFoodB = '🍌';
+    let inlineTargetCountA = 3;
+    let inlineTargetCountB = 3;
+    let selectedInlineFruit = null;
+
+    const showQuizPage = () => {
+      if (synth) synth.cancel();
+      currentPage = 'quiz';
+      gamePage.hidden = true;
+      comparePage.hidden = true;
+      logicPage.hidden = true;
+      quiz.hidden = false;
+      score.hidden = false;
+      applyCurrentPageSize();
+    };
+
+    const showGamePage = () => {
+      currentPage = 'game';
+      gamePage.hidden = false;
+      comparePage.hidden = true;
+      logicPage.hidden = true;
+      quiz.hidden = true;
+      score.hidden = true;
+      applyCurrentPageSize();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const showComparePage = () => {
+      currentPage = 'compare';
+      comparePage.hidden = false;
+      gamePage.hidden = true;
+      logicPage.hidden = true;
+      quiz.hidden = true;
+      score.hidden = true;
+      applyCurrentPageSize();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const showLogicPage = () => {
+      currentPage = 'logic';
+      logicPage.hidden = false;
+      comparePage.hidden = true;
+      gamePage.hidden = true;
+      quiz.hidden = true;
+      score.hidden = true;
+      applyCurrentPageSize();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const setFontSizes = size => {
+      const n = Number(size);
+      rootStyle.setProperty('--question-size', `${n}rem`);
+      rootStyle.setProperty('--choice-size', `${Math.max(1.1, n - 0.18)}rem`);
+    };
+
+    const applyPanelScale = (panel, size) => {
+      const scale = Math.max(0.6, Math.min(1.6, Number(size) / 2.05));
+      panel.style.transform = `scale(${scale})`;
+      panel.style.width = `${100 / scale}%`;
+    };
+
+    function applyCurrentPageSize() {
+      fontSlider.value = String(pageScales[currentPage]);
+      setFontSizes(pageScales.quiz);
+      gamePage.style.transform = '';
+      gamePage.style.width = '';
+      comparePage.style.transform = '';
+      comparePage.style.width = '';
+      logicPage.style.transform = '';
+      logicPage.style.width = '';
+      if (currentPage === 'game') applyPanelScale(gamePage, pageScales.game);
+      if (currentPage === 'compare') applyPanelScale(comparePage, pageScales.compare);
+      if (currentPage === 'logic') applyPanelScale(logicPage, pageScales.logic);
+    }
+
+    const inlineEatenCount = mouth => mouth.children.length;
+    const clearInlineAnswerMarks = () => {
+      inlineGameAnswers.forEach(btn => btn.classList.remove('correct', 'wrong'));
+    };
+    const moreInlineAnswer = () => {
+      if (inlineTargetCountA === inlineTargetCountB) return 'same';
+      return inlineTargetCountA > inlineTargetCountB ? 'a' : 'b';
+    };
+    const updateInlineGameResult = () => {
+      const a = inlineEatenCount(inlineMouthA);
+      const b = inlineEatenCount(inlineMouthB);
+      clearInlineAnswerMarks();
+      if (a === inlineTargetCountA && b === inlineTargetCountB) {
+        inlineGameResult.textContent = '剛剛好！而家答：邊一隻食多啲？';
+      } else if (a > inlineTargetCountA || b > inlineTargetCountB) {
+        inlineGameResult.textContent = '想一想，可能有怪獸食多咗。';
+      } else {
+        inlineGameResult.textContent = `大眼怪食 ${inlineFoodA}：${a}/${inlineTargetCountA}，毛毛怪食 ${inlineFoodB}：${b}/${inlineTargetCountB}`;
+      }
+    };
+    const renderInlineFruitPool = () => {
+      inlineFruitPool.innerHTML = '';
+      const extraFoods = Array.from({ length: randInt(2, 4) }, () => inlineFoods[randInt(0, inlineFoods.length - 1)]);
+      const foodItems = shuffle([
+        ...Array.from({ length: inlineTargetCountA }, () => inlineFoodA),
+        ...Array.from({ length: inlineTargetCountB }, () => inlineFoodB),
+        ...extraFoods
+      ]);
+      foodItems.forEach(food => {
+        const fruit = document.createElement('button');
+        fruit.type = 'button';
+        fruit.className = 'fruit-btn';
+        fruit.textContent = food;
+        fruit.dataset.food = food;
+        fruit.addEventListener('click', () => {
+          document.querySelectorAll('.fruit-btn.selected').forEach(el => el.classList.remove('selected'));
+          selectedInlineFruit = fruit;
+          fruit.classList.add('selected');
+        });
+        inlineFruitPool.appendChild(fruit);
+      });
+    };
+    const feedInlineMonster = (mouth, expectedFood, monsterName) => {
+      if (!selectedInlineFruit) {
+        inlineGameResult.textContent = '先揀一個水果。';
+        return;
+      }
+      if (selectedInlineFruit.dataset.food !== expectedFood) {
+        inlineGameResult.textContent = `${monsterName} 唔食 ${selectedInlineFruit.dataset.food}，佢要食 ${expectedFood}。`;
+        return;
+      }
+      const target = mouth === inlineMouthA ? inlineTargetCountA : inlineTargetCountB;
+      if (inlineEatenCount(mouth) >= target) {
+        inlineGameResult.textContent = `${monsterName} 已經食夠啦。`;
+        return;
+      }
+      const bite = document.createElement('span');
+      bite.textContent = selectedInlineFruit.dataset.food;
+      mouth.appendChild(bite);
+      selectedInlineFruit.remove();
+      selectedInlineFruit = null;
+      updateInlineGameResult();
+    };
+    const newInlineGame = () => {
+      inlineTargetCountA = randInt(3, 5);
+      inlineTargetCountB = randInt(3, 5);
+      inlineFoodA = inlineFoods[randInt(0, inlineFoods.length - 1)];
+      do {
+        inlineFoodB = inlineFoods[randInt(0, inlineFoods.length - 1)];
+      } while (inlineFoodB === inlineFoodA);
+      inlineMouthA.innerHTML = '';
+      inlineMouthB.innerHTML = '';
+      inlineTargetA.textContent = `要食 ${inlineFoodA}：${inlineTargetCountA} 個`;
+      inlineTargetB.textContent = `要食 ${inlineFoodB}：${inlineTargetCountB} 個`;
+      selectedInlineFruit = null;
+      clearInlineAnswerMarks();
+      renderInlineFruitPool();
+      updateInlineGameResult();
+    };
+
+    const inlineCompareList = document.getElementById('inlineCompareList');
+    const inlineCompareScore = document.getElementById('inlineCompareScore');
+    let inlineCompareQuestions = [];
+
+    const buildInlineCompare = () => {
+      const icons = ['🍎', '⚪', '🌸', '🐟', '△', '⭐'];
+      inlineCompareQuestions = Array.from({ length: 10 }, (_, index) => {
+        let left = randInt(28, 78);
+        let right = randInt(28, 78);
+        if (Math.abs(left - right) < 14) {
+          if (left >= right) left += 14;
+          else right += 14;
+        }
+        if (index % 5 === 1) right = left;
+        return {
+          index,
+          icon: icons[randInt(0, icons.length - 1)],
+          left,
+          right,
+          answer: left === right ? '=' : left > right ? '>' : '<',
+          picked: ''
+        };
+      });
+    };
+
+    const renderInlineCompare = () => {
+      inlineCompareList.innerHTML = '';
+      inlineCompareQuestions.forEach(q => {
+        const card = document.createElement('div');
+        card.className = 'compare-card';
+        const left = document.createElement('div');
+        left.className = 'compare-side';
+        left.innerHTML = `<span style="font-size:${q.left}px">${q.icon}</span>`;
+        const ops = document.createElement('div');
+        ops.className = 'compare-ops';
+        ['>', '<', '='].forEach(symbol => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'compare-symbol';
+          btn.textContent = symbol;
+          if (q.picked === symbol) btn.classList.add('active');
+          btn.addEventListener('click', () => {
+            q.picked = symbol;
+            renderInlineCompare();
+          });
+          ops.appendChild(btn);
+        });
+        const right = document.createElement('div');
+        right.className = 'compare-side';
+        right.innerHTML = `<span style="font-size:${q.right}px">${q.icon}</span>`;
+        if (inlineCompareScore.dataset.checked === 'true') {
+          card.classList.add(q.picked === q.answer ? 'correct' : 'wrong');
+        }
+        card.append(left, ops, right);
+        inlineCompareList.appendChild(card);
+      });
+    };
+
+    const newInlineCompare = () => {
+      inlineCompareScore.dataset.checked = 'false';
+      inlineCompareScore.textContent = '完成 10 題後按交卷。';
+      buildInlineCompare();
+      renderInlineCompare();
+    };
+
+    const inlineLogicResult = document.getElementById('inlineLogicResult');
+    const inlineColorTray = document.getElementById('inlineColorTray');
+    const inlineColorBins = document.getElementById('inlineColorBins');
+    const inlineShapeTray = document.getElementById('inlineShapeTray');
+    const inlineShapeBins = document.getElementById('inlineShapeBins');
+    const inlineSizeTray = document.getElementById('inlineSizeTray');
+    const inlineSizeSlots = document.getElementById('inlineSizeSlots');
+    let selectedInlineLogicPiece = null;
+    let inlineLogicPieceId = 0;
+
+    const inlineLogicSets = {
+      color: [
+        { icon: '🍎', key: 'red' },
+        { icon: '🍓', key: 'red' },
+        { icon: '🟡', key: 'yellow' },
+        { icon: '🌟', key: 'yellow' },
+        { icon: '🔵', key: 'blue' },
+        { icon: '🐟', key: 'blue' }
+      ],
+      shape: [
+        { icon: '🔴', key: 'circle' },
+        { icon: '⚪', key: 'circle' },
+        { icon: '⭐', key: 'star' },
+        { icon: '🌟', key: 'star' },
+        { icon: '🔺', key: 'triangle' },
+        { icon: '△', key: 'triangle' }
+      ],
+      size: [
+        { icon: '🍎', key: 'small', size: 34 },
+        { icon: '🍎', key: 'medium', size: 52 },
+        { icon: '🍎', key: 'large', size: 72 }
+      ]
+    };
+
+    const makeInlineLogicPiece = (item, group) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'logic-piece';
+      btn.textContent = item.icon;
+      btn.dataset.key = item.key;
+      btn.dataset.group = group;
+      btn.dataset.pieceId = `inline-logic-${inlineLogicPieceId++}`;
+      if (item.size) btn.style.fontSize = `${item.size}px`;
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.logic-piece.selected').forEach(piece => piece.classList.remove('selected'));
+        selectedInlineLogicPiece = btn;
+        btn.classList.add('selected');
+        inlineLogicResult.textContent = '再點一個分類框放入去。';
+      });
+      return btn;
+    };
+
+    const makeInlineLogicBin = (label, key, group) => {
+      const bin = document.createElement('button');
+      bin.type = 'button';
+      bin.className = group === 'size' ? 'size-slot' : 'logic-bin';
+      bin.dataset.key = key;
+      bin.dataset.group = group;
+      bin.innerHTML = `<strong>${label}</strong>`;
+      bin.addEventListener('click', () => {
+        if (!selectedInlineLogicPiece || selectedInlineLogicPiece.dataset.group !== group) return;
+        const moved = selectedInlineLogicPiece.cloneNode(true);
+        moved.classList.remove('selected');
+        moved.classList.add('used-copy');
+        moved.addEventListener('click', event => {
+          event.stopPropagation();
+          const original = document.querySelector(`.logic-tray .logic-piece[data-piece-id="${moved.dataset.pieceId}"]`);
+          if (original) original.classList.remove('used', 'selected');
+          moved.remove();
+          bin.classList.remove('correct', 'wrong');
+          selectedInlineLogicPiece = null;
+          inlineLogicResult.textContent = '已拎返出嚟，可以再放過。';
+        });
+        bin.appendChild(moved);
+        selectedInlineLogicPiece.classList.add('used');
+        selectedInlineLogicPiece.classList.remove('selected');
+        selectedInlineLogicPiece = null;
+        inlineLogicResult.textContent = '好，繼續放下一個。';
+      });
+      return bin;
+    };
+
+    const renderInlineLogic = () => {
+      selectedInlineLogicPiece = null;
+      inlineLogicPieceId = 0;
+      inlineColorTray.innerHTML = '';
+      inlineColorBins.innerHTML = '';
+      inlineShapeTray.innerHTML = '';
+      inlineShapeBins.innerHTML = '';
+      inlineSizeTray.innerHTML = '';
+      inlineSizeSlots.innerHTML = '';
+      shuffle(inlineLogicSets.color).forEach(item => inlineColorTray.appendChild(makeInlineLogicPiece(item, 'color')));
+      shuffle(inlineLogicSets.shape).forEach(item => inlineShapeTray.appendChild(makeInlineLogicPiece(item, 'shape')));
+      shuffle(inlineLogicSets.size).forEach(item => inlineSizeTray.appendChild(makeInlineLogicPiece(item, 'size')));
+      [['紅色', 'red'], ['黃色', 'yellow'], ['藍色', 'blue']].forEach(([label, key]) => inlineColorBins.appendChild(makeInlineLogicBin(label, key, 'color')));
+      [['圓形', 'circle'], ['星形', 'star'], ['三角形', 'triangle']].forEach(([label, key]) => inlineShapeBins.appendChild(makeInlineLogicBin(label, key, 'shape')));
+      [['細', 'small'], ['中', 'medium'], ['大', 'large']].forEach(([label, key]) => inlineSizeSlots.appendChild(makeInlineLogicBin(label, key, 'size')));
+      inlineLogicResult.textContent = '點選圖案，再放入適合的位置。';
+    };
+
+    const checkInlineLogicGroup = selector => {
+      let correct = 0;
+      let total = 0;
+      document.querySelectorAll(selector).forEach(bin => {
+        const pieces = [...bin.querySelectorAll('.logic-piece')];
+        if (!pieces.length) {
+          bin.classList.remove('correct', 'wrong');
+          return;
+        }
+        const ok = pieces.every(piece => piece.dataset.key === bin.dataset.key);
+        total += pieces.length;
+        correct += pieces.filter(piece => piece.dataset.key === bin.dataset.key).length;
+        bin.classList.toggle('correct', ok);
+        bin.classList.toggle('wrong', !ok);
+      });
+      return { correct, total };
+    };
+
+    quiz.addEventListener('click', e => {
+      const btn = e.target.closest('.speak-btn');
+      if (!btn) return;
+      speakText(btn.dataset.text || '');
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', () => {
+      const blocks = [...document.querySelectorAll('.q')];
+      let correct = 0;
+
+      blocks.forEach(block => {
+        const picked = block.querySelector('input:checked');
+        const answer = block.dataset.answer;
+        const fb = block.querySelector('.feedback');
+
+        if (!picked) {
+          fb.textContent = '請先選一個答案喔～';
+          fb.className = 'feedback bad';
+          return;
+        }
+
+        if (picked.value === answer) {
+          correct++;
+          fb.textContent = '答對啦！好叻！';
+          fb.className = 'feedback ok';
+        } else {
+          fb.textContent = `再試下，正確答案係：${answer}`;
+          fb.className = 'feedback bad';
+        }
+      });
+
+      score.textContent = `你答啱 ${correct} / ${blocks.length} 題 🎉`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      quiz.reset();
+      document.querySelectorAll('.feedback').forEach(f => {
+        f.textContent = '';
+        f.className = 'feedback';
+      });
+      score.textContent = '未交卷';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    document.getElementById('randomBtn').addEventListener('click', () => {
+      if (synth) synth.cancel();
+      if (!gamePage.hidden) {
+        newInlineGame();
+      } else if (!comparePage.hidden) {
+        newInlineCompare();
+      } else if (!logicPage.hidden) {
+        renderInlineLogic();
+      } else {
+        renderQuiz();
+        score.textContent = '已隨機新題目，請開始作答';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
     document.getElementById('openNumPageBtn').addEventListener('click', buildNumberPage);
+    document.getElementById('openGameBtn').addEventListener('click', () => {
+      showGamePage();
+      newInlineGame();
+    });
+    document.getElementById('openCompareBtn').addEventListener('click', () => {
+      showComparePage();
+      newInlineCompare();
+    });
+    document.getElementById('openLogicBtn').addEventListener('click', () => {
+      showLogicPage();
+      renderInlineLogic();
+    });
+    document.getElementById('inlineMonsterA').addEventListener('click', () => feedInlineMonster(inlineMouthA, inlineFoodA, '大眼怪'));
+    document.getElementById('inlineMonsterB').addEventListener('click', () => feedInlineMonster(inlineMouthB, inlineFoodB, '毛毛怪'));
+    document.getElementById('newInlineGameBtn').addEventListener('click', newInlineGame);
+    document.getElementById('clearInlineGameBtn').addEventListener('click', () => {
+      inlineMouthA.innerHTML = '';
+      inlineMouthB.innerHTML = '';
+      selectedInlineFruit = null;
+      clearInlineAnswerMarks();
+      renderInlineFruitPool();
+      updateInlineGameResult();
+    });
+    document.getElementById('speakInlineGameBtn').addEventListener('click', () => {
+      speakText(`大眼怪要食 ${inlineTargetCountA} 個，毛毛怪要食 ${inlineTargetCountB} 個。邊一隻食多啲？`);
+    });
+    inlineGameAnswers.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const answer = moreInlineAnswer();
+        clearInlineAnswerMarks();
+        btn.classList.add(btn.dataset.answer === answer ? 'correct' : 'wrong');
+        inlineGameResult.textContent = btn.dataset.answer === answer ? '答啱！你識比較邊個食多啲。' : '再睇清楚，試多次。';
+      });
+    });
+    newInlineGame();
+    document.querySelectorAll('.backHomeBtn').forEach(btn => {
+      btn.addEventListener('click', showQuizPage);
+    });
+    document.getElementById('newInlineCompareBtn').addEventListener('click', newInlineCompare);
+    document.getElementById('checkInlineCompareBtn').addEventListener('click', () => {
+      const correct = inlineCompareQuestions.reduce((sum, q) => sum + (q.picked === q.answer ? 1 : 0), 0);
+      inlineCompareScore.dataset.checked = 'true';
+      inlineCompareScore.textContent = `你答啱 ${correct} / 10 題`;
+      renderInlineCompare();
+    });
+    newInlineCompare();
+    document.getElementById('newInlineLogicBtn').addEventListener('click', renderInlineLogic);
+    document.getElementById('checkInlineLogicBtn').addEventListener('click', () => {
+      const color = checkInlineLogicGroup('#inlineColorBins .logic-bin');
+      const shape = checkInlineLogicGroup('#inlineShapeBins .logic-bin');
+      const size = checkInlineLogicGroup('#inlineSizeSlots .size-slot');
+      const correct = color.correct + shape.correct + size.correct;
+      const total = color.total + shape.total + size.total;
+      inlineLogicResult.textContent = total ? `做對 ${correct} / ${total} 個，綠色就係放啱。` : '先放入圖案，再按檢查。';
+    });
+    renderInlineLogic();
+
+    applyCurrentPageSize();
+    fontSlider.addEventListener('input', () => {
+      pageScales[currentPage] = Number(fontSlider.value);
+      applyCurrentPageSize();
+    });
   </script>
 </body>
 </html>
